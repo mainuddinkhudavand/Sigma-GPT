@@ -5,6 +5,20 @@ import ReactMarkdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
 import "highlight.js/styles/github-dark.css";
 
+const CopyButton = ({ text }) => {
+    const [copied, setCopied] = useState(false);
+    const triggerCopy = () => {
+        navigator.clipboard.writeText(text);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+    };
+    return (
+        <button className="copy-msg-btn" onClick={triggerCopy} title="Copy message">
+            {copied ? <i className="fa-solid fa-check"></i> : <i className="fa-solid fa-copy"></i>}
+        </button>
+    );
+};
+
 function Chat() {
     const {newChat, prevChats, reply} = useContext(MyContext);
     const [latestReply, setLatestReply] = useState(null);
@@ -37,11 +51,16 @@ function Chat() {
             <div className="chats">
                 {
                     prevChats?.slice(0, -1).map((chat, idx) => 
-                        <div className={chat.role === "user"? "userDiv" : "gptDiv"} key={idx}>
+                        <div className={chat.role === "user"? "userDiv" : "gptDiv message-container"} key={idx}>
                             {
                                 chat.role === "user"? 
                                 <p className="userMessage">{chat.content}</p> : 
-                                <ReactMarkdown rehypePlugins={[rehypeHighlight]}>{chat.content}</ReactMarkdown>
+                                <>
+                                    <div className="message-content">
+                                        <ReactMarkdown rehypePlugins={[rehypeHighlight]}>{chat.content}</ReactMarkdown>
+                                    </div>
+                                    <CopyButton text={chat.content} />
+                                </>
                             }
                         </div>
                     )
@@ -52,13 +71,19 @@ function Chat() {
                         <>
                             {
                                 latestReply === null ? (
-                                    <div className="gptDiv" key={"non-typing"} >
-                                    <ReactMarkdown rehypePlugins={[rehypeHighlight]}>{prevChats[prevChats.length-1].content}</ReactMarkdown>
-                                </div>
+                                    <div className="gptDiv message-container" key={"non-typing"} >
+                                        <div className="message-content">
+                                            <ReactMarkdown rehypePlugins={[rehypeHighlight]}>{prevChats[prevChats.length-1].content}</ReactMarkdown>
+                                        </div>
+                                        <CopyButton text={prevChats[prevChats.length-1].content} />
+                                    </div>
                                 ) : (
-                                    <div className="gptDiv" key={"typing"} >
-                                     <ReactMarkdown rehypePlugins={[rehypeHighlight]}>{latestReply}</ReactMarkdown>
-                                </div>
+                                    <div className="gptDiv message-container" key={"typing"} >
+                                        <div className="message-content">
+                                            <ReactMarkdown rehypePlugins={[rehypeHighlight]}>{latestReply}</ReactMarkdown>
+                                        </div>
+                                        <CopyButton text={latestReply} />
+                                    </div>
                                 )
 
                             }

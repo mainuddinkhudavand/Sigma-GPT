@@ -32,3 +32,41 @@
 pre {
     white-space: pre-wrap;
 }
+
+.message-container {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    padding-right: 2.5rem;
+}
+
+.message-content {
+    flex-grow: 1;
+}
+
+.copy-msg-btn {
+    position: absolute !important;
+    right: 0 !important;
+    top: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    cursor: pointer !important;
+    font-size: 13px !important;
+    color: var(--text-secondary) !important;
+    opacity: 0;
+    transition: opacity 0.2s, color 0.2s;
+    padding: 6px !important;
+    border-radius: 6px !important;
+    margin: 0 !important;
+}
+
+.message-container:hover .copy-msg-btn {
+    opacity: 1;
+}
+
+.copy-msg-btn:hover {
+    color: var(--text-primary) !important;
+    background-color: var(--bg-secondary) !important;
+}
