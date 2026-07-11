@@ -4,7 +4,7 @@ import { MyContext } from "./MyContext.jsx";
 import { useContext, useState, useEffect } from "react";
 
 function ChatWindow() {
-    const {prompt, setPrompt, reply, setReply, currThreadId, setPrevChats, setNewChat, persona, setPersona, setIsSettingsOpen} = useContext(MyContext);
+    const {prompt, setPrompt, reply, setReply, currThreadId, setPrevChats, setNewChat, persona, setPersona, setIsSettingsOpen, username, avatarColor} = useContext(MyContext);
     const [loading, setLoading] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
 
@@ -97,7 +97,9 @@ function ChatWindow() {
                     )}
                 </div>
                 <div className="userIconDiv" onClick={handleProfileClick}>
-                    <span className="userIcon"><i className="fa-solid fa-user"></i></span>
+                    <span className="userIcon" style={{ backgroundColor: avatarColor, color: '#fff', fontWeight: 'bold' }} title={username}>
+                        {username ? username.charAt(0).toUpperCase() : 'U'}
+                    </span>
                 </div>
             </div>
             {
