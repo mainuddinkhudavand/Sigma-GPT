@@ -3,6 +3,7 @@ import "dotenv/config";
 import cors from "cors";
 import mongoose from "mongoose";
 import chatRoutes from "./routes/chat.js";
+import { MongoMemoryServer } from "mongodb-memory-server";
 
 const app = express();
 const PORT = 8080;
@@ -19,7 +20,14 @@ app.listen(PORT, () => {
 
 const connectDB = async() => {
     try {
-        await mongoose.connect(process.env.MONGODB_URI);
+        let uri = process.env.MONGODB_URI;
+        if (!uri) {
+            console.log("No MONGODB_URI environment variable found. Starting in-memory MongoDB server...");
+            const mongoServer = await MongoMemoryServer.create();
+            uri = mongoServer.getUri();
+            console.log(`In-memory MongoDB started at: ${uri}`);
+        }
+        await mongoose.connect(uri);
         console.log("Connected with Database!");
     } catch(err) {
         console.log("Failed to connect with Db", err);
