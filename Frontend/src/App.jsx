@@ -1,6 +1,7 @@
 import './App.css';
 import Sidebar from "./Sidebar.jsx";
 import ChatWindow from "./ChatWindow.jsx";
+import SettingsModal from "./SettingsModal.jsx";
 import { MyContext } from "./MyContext.jsx";
 import { useState, useEffect } from 'react';
 import { v1 as uuidv1 } from "uuid";
@@ -52,6 +53,7 @@ function App() {
       <MyContext.Provider value={providerValues}>
           <Sidebar></Sidebar>
           <ChatWindow></ChatWindow>
+          <SettingsModal></SettingsModal>
         </MyContext.Provider>
     </div>
   )
