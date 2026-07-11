@@ -159,3 +159,25 @@ input:focus {
     background-color: rgba(180, 180, 180, 0.1);
     border-radius: 6px;
 }
+
+.nav-icon-btn {
+    background: transparent !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-secondary) !important;
+    padding: 6px !important;
+    border-radius: 50% !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: color 0.2s, border-color 0.2s, background-color 0.2s !important;
+    margin: 0 !important;
+    width: 32px !important;
+    height: 32px !important;
+}
+
+.nav-icon-btn:hover {
+    color: var(--text-primary) !important;
+    border-color: var(--text-secondary) !important;
+    background-color: var(--bg-secondary) !important;
+}

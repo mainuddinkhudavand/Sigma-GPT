@@ -55,6 +55,25 @@ function ChatWindow() {
     }, [reply]);
 
 
+    const exportChatToMarkdown = () => {
+        if (!prevChats || prevChats.length === 0) return;
+
+        let markdownContent = `# SigmaGPT Chat Export\n\n`;
+        prevChats.forEach((chat) => {
+            const roleName = chat.role === "user" ? "User" : "SigmaGPT";
+            markdownContent += `### **${roleName}**:\n${chat.content}\n\n---\n\n`;
+        });
+
+        const blob = new Blob([markdownContent], { type: "text/markdown;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", `sigmagpt-chat-${currThreadId.substring(0, 8)}.md`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
     const handleProfileClick = () => {
         setIsOpen(!isOpen);
     }
@@ -72,6 +91,11 @@ function ChatWindow() {
                             <option value="sarcastic">🤪 Sarcastic Buddy</option>
                         </select>
                     </div>
+                    {prevChats && prevChats.length > 0 && (
+                        <button className="nav-icon-btn" onClick={exportChatToMarkdown} title="Export Chat to Markdown">
+                            <i className="fa-solid fa-download"></i>
+                        </button>
+                    )}
                 </div>
                 <div className="userIconDiv" onClick={handleProfileClick}>
                     <span className="userIcon"><i className="fa-solid fa-user"></i></span>
