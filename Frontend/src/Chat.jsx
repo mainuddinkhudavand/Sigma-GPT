@@ -19,6 +19,46 @@ const CopyButton = ({ text }) => {
     );
 };
 
+const CopyCodeButton = ({ text }) => {
+    const [copied, setCopied] = useState(false);
+    const triggerCopy = (e) => {
+        e.stopPropagation();
+        navigator.clipboard.writeText(text);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+    };
+    return (
+        <button className="copy-code-btn" onClick={triggerCopy}>
+            {copied ? <><i className="fa-solid fa-check"></i> Copied</> : <><i className="fa-solid fa-copy"></i> Copy</>}
+        </button>
+    );
+};
+
+const MarkdownComponents = {
+    code({ node, className, children, ...props }) {
+        const match = /language-(\w+)/.exec(className || '');
+        const codeText = String(children).replace(/\n$/, '');
+        const isBlock = match || String(children).includes('\n');
+        
+        if (isBlock) {
+            return (
+                <div className="code-container">
+                    <div className="code-header">
+                        <span className="code-lang">{match ? match[1] : 'code'}</span>
+                        <CopyCodeButton text={codeText} />
+                    </div>
+                    <pre className="code-pre">
+                        <code className={className} {...props}>
+                            {children}
+                        </code>
+                    </pre>
+                </div>
+            );
+        }
+        return <code className={className} {...props}>{children}</code>;
+    }
+};
+
 function Chat() {
     const {newChat, prevChats, reply} = useContext(MyContext);
     const [latestReply, setLatestReply] = useState(null);
@@ -57,7 +97,7 @@ function Chat() {
                                 <p className="userMessage">{chat.content}</p> : 
                                 <>
                                     <div className="message-content">
-                                        <ReactMarkdown rehypePlugins={[rehypeHighlight]}>{chat.content}</ReactMarkdown>
+                                        <ReactMarkdown rehypePlugins={[rehypeHighlight]} components={MarkdownComponents}>{chat.content}</ReactMarkdown>
                                     </div>
                                     <CopyButton text={chat.content} />
                                 </>
@@ -73,14 +113,14 @@ function Chat() {
                                 latestReply === null ? (
                                     <div className="gptDiv message-container" key={"non-typing"} >
                                         <div className="message-content">
-                                            <ReactMarkdown rehypePlugins={[rehypeHighlight]}>{prevChats[prevChats.length-1].content}</ReactMarkdown>
+                                            <ReactMarkdown rehypePlugins={[rehypeHighlight]} components={MarkdownComponents}>{prevChats[prevChats.length-1].content}</ReactMarkdown>
                                         </div>
                                         <CopyButton text={prevChats[prevChats.length-1].content} />
                                     </div>
                                 ) : (
                                     <div className="gptDiv message-container" key={"typing"} >
                                         <div className="message-content">
-                                            <ReactMarkdown rehypePlugins={[rehypeHighlight]}>{latestReply}</ReactMarkdown>
+                                            <ReactMarkdown rehypePlugins={[rehypeHighlight]} components={MarkdownComponents}>{latestReply}</ReactMarkdown>
                                         </div>
                                         <CopyButton text={latestReply} />
                                     </div>
