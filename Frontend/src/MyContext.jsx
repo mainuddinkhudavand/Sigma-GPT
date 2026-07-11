@@ -1,3 +1,10 @@
 import { createContext } from "react";
 
-export const MyContext = createContext("");
+export const THEMES = {
+  DARK: "dark",
+  CYBERPUNK: "cyberpunk",
+  GLASSMORPHISM: "glassmorphism",
+  EMERALD: "emerald"
+};
+
+export const MyContext = createContext(null);
