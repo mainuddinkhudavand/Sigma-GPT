@@ -68,7 +68,7 @@ router.delete("/thread/:threadId", async (req, res) => {
 });
 
 router.post("/chat", async(req, res) => {
-    const {threadId, message} = req.body;
+    const {threadId, message, persona} = req.body;
 
     if(!threadId || !message) {
         res.status(400).json({error: "missing required fields"});
@@ -88,7 +88,7 @@ router.post("/chat", async(req, res) => {
             thread.messages.push({role: "user", content: message});
         }
 
-        const assistantReply = await getOpenAIAPIResponse(message);
+        const assistantReply = await getOpenAIAPIResponse(message, persona);
 
         thread.messages.push({role: "assistant", content: assistantReply});
         thread.updatedAt = new Date();

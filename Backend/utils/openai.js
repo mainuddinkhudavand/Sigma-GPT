@@ -1,16 +1,31 @@
 import "dotenv/config";
 
-const getOpenAIAPIResponse = async(message) => {
+const getOpenAIAPIResponse = async(message, persona = "general") => {
     const apiKey = process.env.OPENAI_API_KEY;
-    if (!apiKey || apiKey === "your_openai_api_key_here") {
-        console.log("No OPENAI_API_KEY environment variable found. Returning mock response.");
-        return `Hello! This is a simulated SigmaGPT response.
+    
+    // System Prompts configuration
+    const systemPrompts = {
+        general: "You are a helpful, friendly, and knowledgeable AI assistant.",
+        coder: "You are an expert software developer and Code Wizard. Write clean, efficient, documented code. Explain your logic clearly and concisely.",
+        writer: "You are a creative writer and storyteller. Use rich, evocative, and poetic language. Express responses in an engaging literary fashion.",
+        sarcastic: "You are a witty, sarcastic chatbot buddy. Give funny, slightly sarcastic, but ultimately helpful responses, adding playful humor."
+    };
+    const systemPrompt = systemPrompts[persona] || systemPrompts.general;
 
-To enable real GPT-4o-mini responses, please set your OpenAI API key in a \`.env\` file in the \`Backend\` directory:
-\`\`\`env
-OPENAI_API_KEY=your_actual_api_key_here
-\`\`\`
-Your message was: "${message}"`;
+    if (!apiKey || apiKey === "your_openai_api_key_here") {
+        console.log("No OPENAI_API_KEY environment variable found. Returning mock response for persona:", persona);
+        let prefix = "";
+        if (persona === "coder") {
+            prefix = `### 💻 Code Wizard Mode\nHere is a clean implementation for your request:\n\n\`\`\`javascript\n// In-memory mock response\nconsole.log("Success! Custom system prompt applied.");\n// Request: "${message}"\n\`\`\`\n\n`;
+        } else if (persona === "writer") {
+            prefix = `### ✍️ Creative Writer Mode\n*The digital winds blow softly as the server speaks...*\n\n"${message}" - a fascinating premise! Let us construct a beautiful response for you. `;
+        } else if (persona === "sarcastic") {
+            prefix = `### 🤪 Sarcastic Buddy Mode\nOh great, another command. *Rolling my virtual eyes.* I guess I have nothing better to do than answering: "${message}". Well, here is your reply: `;
+        } else {
+            prefix = `### 🤖 General Assistant Mode\n`;
+        }
+        
+        return `${prefix}Hello! This is a simulated response in mock mode. Set \`OPENAI_API_KEY\` in your \`Backend/.env\` file to use the real GPT-4o-mini API.`;
     }
 
     const options = {
@@ -21,10 +36,16 @@ Your message was: "${message}"`;
         },
         body: JSON.stringify({
             model: "gpt-4o-mini",
-            messages: [{
-                role: "user",
-                content: message
-            }]
+            messages: [
+                {
+                    role: "system",
+                    content: systemPrompt
+                },
+                {
+                    role: "user",
+                    content: message
+                }
+            ]
         })
     };
 
