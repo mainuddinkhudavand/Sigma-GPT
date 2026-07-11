@@ -2,7 +2,6 @@ import "./ChatWindow.css";
 import Chat from "./Chat.jsx";
 import { MyContext } from "./MyContext.jsx";
 import { useContext, useState, useEffect } from "react";
-import {ScaleLoader} from "react-spinners";
 
 function ChatWindow() {
     const {prompt, setPrompt, reply, setReply, currThreadId, setPrevChats, setNewChat, persona, setPersona, setIsSettingsOpen} = useContext(MyContext);
@@ -111,8 +110,18 @@ function ChatWindow() {
             }
             <Chat></Chat>
 
-            <ScaleLoader color="#fff" loading={loading}>
-            </ScaleLoader>
+            {loading && (
+                <div className="gpt-loader-container">
+                    <div className="gpt-avatar-loader">
+                        <i className="fa-solid fa-robot"></i>
+                    </div>
+                    <div className="typing-bubble">
+                        <span className="dot"></span>
+                        <span className="dot"></span>
+                        <span className="dot"></span>
+                    </div>
+                </div>
+            )}
             
             <div className="chatInput">
                 <div className="inputBox">
