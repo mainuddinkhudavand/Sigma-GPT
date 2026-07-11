@@ -80,49 +80,68 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    padding: 0 1.5rem 1rem 1.5rem;
+    background: linear-gradient(180deg, transparent, var(--bg-primary) 60%);
 }
 
 .inputBox {
     width: 100%;
     position: relative;
-    max-width: 700px;
+    max-width: 720px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    background-color: var(--bg-input) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 24px !important;
+    box-shadow: var(--shadow-md) !important;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    padding: 6px !important;
 }
 
-input {
+.inputBox:focus-within {
+    border-color: var(--accent-color) !important;
+    box-shadow: 0 0 0 2px var(--accent-glow) !important;
+}
+
+.chatWindow input {
     width: 100%;
-    border: none;
-    background-color: rgba(255, 255, 255, 0.05);
-    padding: 20px;
-    font-size: 0.8rem;
-    border-radius: 14px;
-    box-shadow: rgba(0, 0, 0, 0.05) 0 54px 55px,
-                rgba(0, 0, 0, 0.05) 0 -12px 30px,
-                rgba(0, 0, 0, 0.05) 0 4px 6px,
-                rgba(0, 0, 0, 0.05) 0 12px 3px,
-                rgba(0, 0, 0, 0.05) 0 -3px 5px;
-}
-
-input:focus {
-    outline: none;
+    border: none !important;
+    background: transparent !important;
+    padding: 14px 50px 14px 20px !important;
+    font-size: 0.95rem !important;
+    color: var(--text-primary) !important;
+    border-radius: 20px !important;
+    box-shadow: none !important;
+    outline: none !important;
 }
 
 #submit {
     cursor: pointer;
-    height: 35px;
-    width: 35px;
-    font-size: 20px;
-    position: absolute;
-    right: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    height: 36px !important;
+    width: 36px !important;
+    border-radius: 50% !important;
+    background-color: var(--accent-color) !important;
+    color: #fff !important;
+    font-size: 14px !important;
+    position: absolute !important;
+    right: 12px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: transform 0.2s, background-color 0.2s !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
 }
 
-#submit i:hover {
-    color: #fff;
+#submit:hover {
+    transform: scale(1.08) !important;
+    filter: brightness(1.1) !important;
+}
+
+#submit i {
+    color: #fff !important;
 }
 
 .info {
