@@ -5,7 +5,7 @@ import { useContext, useState, useEffect } from "react";
 import {ScaleLoader} from "react-spinners";
 
 function ChatWindow() {
-    const {prompt, setPrompt, reply, setReply, currThreadId, setPrevChats, setNewChat} = useContext(MyContext);
+    const {prompt, setPrompt, reply, setReply, currThreadId, setPrevChats, setNewChat, persona, setPersona, setIsSettingsOpen} = useContext(MyContext);
     const [loading, setLoading] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
 
@@ -61,7 +61,17 @@ function ChatWindow() {
     return (
         <div className="chatWindow">
             <div className="navbar">
-                <span>SigmaGPT <i className="fa-solid fa-chevron-down"></i></span>
+                <div className="nav-left">
+                    <span className="logo-title">SigmaGPT</span>
+                    <div className="persona-selector">
+                        <select value={persona} onChange={(e) => setPersona(e.target.value)} className="persona-select">
+                            <option value="general">🤖 Assistant</option>
+                            <option value="coder">💻 Code Wizard</option>
+                            <option value="writer">✍️ Creative Writer</option>
+                            <option value="sarcastic">🤪 Sarcastic Buddy</option>
+                        </select>
+                    </div>
+                </div>
                 <div className="userIconDiv" onClick={handleProfileClick}>
                     <span className="userIcon"><i className="fa-solid fa-user"></i></span>
                 </div>
@@ -69,9 +79,9 @@ function ChatWindow() {
             {
                 isOpen && 
                 <div className="dropDown">
-                    <div className="dropDownItem"><i class="fa-solid fa-gear"></i> Settings</div>
-                    <div className="dropDownItem"><i class="fa-solid fa-cloud-arrow-up"></i> Upgrade plan</div>
-                    <div className="dropDownItem"><i class="fa-solid fa-arrow-right-from-bracket"></i> Log out</div>
+                    <div className="dropDownItem" onClick={() => { setIsSettingsOpen(true); setIsOpen(false); }}><i className="fa-solid fa-gear"></i> Settings</div>
+                    <div className="dropDownItem"><i className="fa-solid fa-cloud-arrow-up"></i> Upgrade plan</div>
+                    <div className="dropDownItem"><i className="fa-solid fa-arrow-right-from-bracket"></i> Log out</div>
                 </div>
             }
             <Chat></Chat>

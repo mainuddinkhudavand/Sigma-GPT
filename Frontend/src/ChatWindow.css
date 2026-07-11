@@ -16,10 +16,46 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    background-color: rgba(19, 19, 20, 0.4);
+    backdrop-filter: blur(10px);
 }
 
-.navbar span {
-    margin: 1rem 2rem;
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.logo-title {
+    margin: 1rem 0 1rem 2rem !important;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--text-primary);
+}
+
+.persona-selector {
+    background-color: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 4px 10px;
+    display: flex;
+    align-items: center;
+}
+
+.persona-select {
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    outline: none;
+}
+
+.persona-select option {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
 }
 
 .userIconDiv {
