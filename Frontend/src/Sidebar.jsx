@@ -1,10 +1,11 @@
 import "./Sidebar.css";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { MyContext } from "./MyContext.jsx";
 import {v1 as uuidv1} from "uuid";
 
 function Sidebar() {
     const {allThreads, setAllThreads, currThreadId, setNewChat, setPrompt, setReply, setCurrThreadId, setPrevChats} = useContext(MyContext);
+    const [searchQuery, setSearchQuery] = useState("");
 
     const getAllThreads = async () => {
         try {
@@ -71,6 +72,16 @@ function Sidebar() {
                 <span><i className="fa-solid fa-pen-to-square"></i></span>
             </button>
 
+            <div className="search-container">
+                <i className="fa-solid fa-magnifying-glass search-icon"></i>
+                <input
+                    type="text"
+                    placeholder="Search chats..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="search-input"
+                />
+            </div>
 
             <ul className="history">
                 {
