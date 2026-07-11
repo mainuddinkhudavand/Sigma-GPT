@@ -1,9 +1,9 @@
 import './App.css';
 import Sidebar from "./Sidebar.jsx";
 import ChatWindow from "./ChatWindow.jsx";
-import {MyContext} from "./MyContext.jsx";
-import { useState } from 'react';
-import {v1 as uuidv1} from "uuid";
+import { MyContext } from "./MyContext.jsx";
+import { useState, useEffect } from 'react';
+import { v1 as uuidv1 } from "uuid";
 
 function App() {
   const [prompt, setPrompt] = useState("");
@@ -12,6 +12,27 @@ function App() {
   const [prevChats, setPrevChats] = useState([]); //stores all chats of curr threads
   const [newChat, setNewChat] = useState(true);
   const [allThreads, setAllThreads] = useState([]);
+  
+  // Theme and User Customization States
+  const [theme, setTheme] = useState(localStorage.getItem("sigmagpt-theme") || "dark");
+  const [username, setUsername] = useState(localStorage.getItem("sigmagpt-username") || "Explorer");
+  const [avatarColor, setAvatarColor] = useState(localStorage.getItem("sigmagpt-avatar-color") || "#339cff");
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+
+  // Sync theme attribute with document element
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem("sigmagpt-theme", theme);
+  }, [theme]);
+
+  // Sync username and avatarColor to localStorage
+  useEffect(() => {
+    localStorage.setItem("sigmagpt-username", username);
+  }, [username]);
+
+  useEffect(() => {
+    localStorage.setItem("sigmagpt-avatar-color", avatarColor);
+  }, [avatarColor]);
 
   const providerValues = {
     prompt, setPrompt,
@@ -19,7 +40,11 @@ function App() {
     currThreadId, setCurrThreadId,
     newChat, setNewChat,
     prevChats, setPrevChats,
-    allThreads, setAllThreads
+    allThreads, setAllThreads,
+    theme, setTheme,
+    username, setUsername,
+    avatarColor, setAvatarColor,
+    isSettingsOpen, setIsSettingsOpen
   }; 
 
   return (
@@ -32,4 +57,4 @@ function App() {
   )
 }
 
-export default App
+export default App;
