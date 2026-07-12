@@ -33,14 +33,22 @@ function SettingsModal() {
     if (!window.confirm("Are you sure you want to permanently delete ALL conversations? This action cannot be undone.")) {
       return;
     }
-    // Backend API will be integrated in Step 33!
-    setAllThreads([]);
-    setPrompt("");
-    setReply(null);
-    setPrevChats([]);
-    setNewChat(true);
-    setCurrThreadId(uuidv1());
-    setIsSettingsOpen(false);
+    
+    try {
+      const response = await fetch("http://localhost:8080/api/thread", { method: "DELETE" });
+      const res = await response.json();
+      console.log(res);
+
+      setAllThreads([]);
+      setPrompt("");
+      setReply(null);
+      setPrevChats([]);
+      setNewChat(true);
+      setCurrThreadId(uuidv1());
+      setIsSettingsOpen(false);
+    } catch(err) {
+      console.error("Failed to clear all threads from database:", err);
+    }
   };
 
   const presetColors = [
