@@ -18,7 +18,9 @@ function App() {
   const [theme, setTheme] = useState(localStorage.getItem("sigmagpt-theme") || "dark");
   const [username, setUsername] = useState(localStorage.getItem("sigmagpt-username") || "Explorer");
   const [avatarColor, setAvatarColor] = useState(localStorage.getItem("sigmagpt-avatar-color") || "#339cff");
+  const [persona, setPersona] = useState(localStorage.getItem("sigmagpt-persona") || "general");
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 768);
 
   // Sync theme attribute with document element
   useEffect(() => {
@@ -26,7 +28,7 @@ function App() {
     localStorage.setItem("sigmagpt-theme", theme);
   }, [theme]);
 
-  // Sync username and avatarColor to localStorage
+  // Sync username, avatarColor, and persona to localStorage
   useEffect(() => {
     localStorage.setItem("sigmagpt-username", username);
   }, [username]);
@@ -34,6 +36,10 @@ function App() {
   useEffect(() => {
     localStorage.setItem("sigmagpt-avatar-color", avatarColor);
   }, [avatarColor]);
+
+  useEffect(() => {
+    localStorage.setItem("sigmagpt-persona", persona);
+  }, [persona]);
 
   const providerValues = {
     prompt, setPrompt,
@@ -45,11 +51,13 @@ function App() {
     theme, setTheme,
     username, setUsername,
     avatarColor, setAvatarColor,
-    isSettingsOpen, setIsSettingsOpen
+    persona, setPersona,
+    isSettingsOpen, setIsSettingsOpen,
+    isSidebarOpen, setIsSidebarOpen
   }; 
 
   return (
-    <div className='app'>
+    <div className={`app ${isSidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
       <MyContext.Provider value={providerValues}>
           <Sidebar></Sidebar>
           <ChatWindow></ChatWindow>

@@ -281,3 +281,43 @@
         opacity: 1;
     }
 }
+
+.sidebar-toggle-btn {
+    display: none;
+    background: transparent !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-secondary) !important;
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 8px !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    margin: 0 0 0 1.5rem !important;
+    font-size: 16px !important;
+    transition: background-color 0.25s, color 0.25s;
+    padding: 0 !important;
+}
+
+.sidebar-toggle-btn:hover {
+    background-color: var(--bg-secondary) !important;
+    color: var(--text-primary) !important;
+}
+
+@media (max-width: 768px) {
+    .sidebar-toggle-btn {
+        display: flex !important;
+    }
+    
+    .logo-title {
+        margin: 1rem 0 !important;
+    }
+    
+    .chats {
+        padding: 1.5rem 1rem !important;
+    }
+    
+    .gpt-loader-container {
+        margin-left: 1.5rem !important;
+    }
+}

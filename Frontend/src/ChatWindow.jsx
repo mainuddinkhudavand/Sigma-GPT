@@ -4,7 +4,7 @@ import { MyContext } from "./MyContext.jsx";
 import { useContext, useState, useEffect } from "react";
 
 function ChatWindow() {
-    const {prompt, setPrompt, reply, setReply, currThreadId, setPrevChats, setNewChat, persona, setPersona, setIsSettingsOpen, username, avatarColor} = useContext(MyContext);
+    const {prompt, setPrompt, reply, setReply, currThreadId, setPrevChats, setNewChat, persona, setPersona, setIsSettingsOpen, username, avatarColor, isSidebarOpen, setIsSidebarOpen} = useContext(MyContext);
     const [loading, setLoading] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
 
@@ -81,6 +81,9 @@ function ChatWindow() {
         <div className="chatWindow">
             <div className="navbar">
                 <div className="nav-left">
+                    <button className="sidebar-toggle-btn" onClick={() => setIsSidebarOpen(!isSidebarOpen)} title="Toggle sidebar">
+                        <i className="fa-solid fa-bars"></i>
+                    </button>
                     <span className="logo-title">SigmaGPT</span>
                     <div className="persona-selector">
                         <select value={persona} onChange={(e) => setPersona(e.target.value)} className="persona-select">

@@ -1,24 +1,74 @@
 .sidebar {
-    background-color: #171717;
-    color: #b4b4b4;
+    background-color: var(--bg-sidebar);
+    color: var(--text-secondary);
     height: 100vh;
     width: 320px;
+    min-width: 320px;
+    max-width: 320px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    border-right: 1px solid var(--sidebar-border);
 }
 
-
-button {
+.sidebar-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 10px;
     padding: 10px;
-    border-radius: 5px;
-    background-color: transparent;
-    border: solid 0.5px rgba(255, 255, 255, 0.5);
-    cursor: pointer;
+    gap: 8px;
+}
+
+.new-chat-btn {
+    flex-grow: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px !important;
+    border-radius: 8px !important;
+    background-color: transparent !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-primary) !important;
+    cursor: pointer !important;
+    transition: background-color 0.2s, border-color 0.2s;
+    margin: 0 !important;
+}
+
+.new-chat-btn span i {
+    color: var(--text-primary) !important;
+}
+
+.new-chat-btn:hover {
+    background-color: var(--bg-secondary) !important;
+    border-color: var(--text-secondary) !important;
+}
+
+.sidebar-close-btn {
+    display: none;
+    background: transparent !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-secondary) !important;
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 8px !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    margin: 0 !important;
+    font-size: 16px !important;
+    transition: background-color 0.25s, color 0.25s;
+    padding: 0 !important;
+}
+
+.sidebar-close-btn:hover {
+    background-color: var(--bg-secondary) !important;
+    color: var(--text-primary) !important;
+}
+
+@media (max-width: 768px) {
+    .sidebar-close-btn {
+        display: flex !important;
+    }
 }
 
 .logo {
@@ -27,14 +77,6 @@ button {
     background-color: #fff;
     border-radius: 50%;
     object-fit: cover;
-}
-
-button span {
-    font-size: 20px;
-}
-
-button:hover {
-    background-color: rgba(180, 180, 180, 0.05);
 }
 
 .history {
