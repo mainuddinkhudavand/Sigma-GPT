@@ -132,7 +132,10 @@ function Chat() {
                                     <div className="message-content">
                                         <ReactMarkdown rehypePlugins={[rehypeHighlight]} components={MarkdownComponents}>{chat.content}</ReactMarkdown>
                                     </div>
-                                    <CopyButton text={chat.content} />
+                                    <div className="message-actions">
+                                        <CopyButton text={chat.content} />
+                                        <SpeakButton text={chat.content} />
+                                    </div>
                                 </>
                             }
                         </div>
@@ -148,14 +151,20 @@ function Chat() {
                                         <div className="message-content">
                                             <ReactMarkdown rehypePlugins={[rehypeHighlight]} components={MarkdownComponents}>{prevChats[prevChats.length-1].content}</ReactMarkdown>
                                         </div>
-                                        <CopyButton text={prevChats[prevChats.length-1].content} />
+                                        <div className="message-actions">
+                                            <CopyButton text={prevChats[prevChats.length-1].content} />
+                                            <SpeakButton text={prevChats[prevChats.length-1].content} />
+                                        </div>
                                     </div>
                                 ) : (
                                     <div className="gptDiv message-container" key={"typing"} >
                                         <div className="message-content">
                                             <ReactMarkdown rehypePlugins={[rehypeHighlight]} components={MarkdownComponents}>{latestReply}</ReactMarkdown>
                                         </div>
-                                        <CopyButton text={latestReply} />
+                                        <div className="message-actions">
+                                            <CopyButton text={latestReply} />
+                                            <SpeakButton text={latestReply} />
+                                        </div>
                                     </div>
                                 )
 

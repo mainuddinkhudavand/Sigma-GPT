@@ -80,27 +80,39 @@ pre {
     flex-grow: 1;
 }
 
-.copy-msg-btn {
-    position: absolute !important;
-    right: 0 !important;
-    top: 0 !important;
+.message-actions {
+    position: absolute;
+    right: 0;
+    top: 0;
+    display: flex;
+    gap: 4px;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.message-container:hover .message-actions {
+    opacity: 1;
+}
+
+.copy-msg-btn, .speak-msg-btn {
     background: transparent !important;
     border: none !important;
     cursor: pointer !important;
     font-size: 13px !important;
     color: var(--text-secondary) !important;
-    opacity: 0;
-    transition: opacity 0.2s, color 0.2s;
+    opacity: 1 !important;
     padding: 6px !important;
     border-radius: 6px !important;
     margin: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 28px !important;
+    height: 28px !important;
+    transition: background-color 0.2s, color 0.2s;
 }
 
-.message-container:hover .copy-msg-btn {
-    opacity: 1;
-}
-
-.copy-msg-btn:hover {
+.copy-msg-btn:hover, .speak-msg-btn:hover {
     color: var(--text-primary) !important;
     background-color: var(--bg-secondary) !important;
 }
