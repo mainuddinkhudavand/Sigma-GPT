@@ -10,6 +10,8 @@ function SettingsModal() {
     setUsername,
     avatarColor,
     setAvatarColor,
+    customPrompt,
+    setCustomPrompt,
     isSettingsOpen,
     setIsSettingsOpen
   } = useContext(MyContext);
@@ -114,6 +116,21 @@ function SettingsModal() {
                 </div>
                 <span>Emerald Forest</span>
               </div>
+            </div>
+          </div>
+
+          {/* Custom System prompt instructions */}
+          <div className="settings-section">
+            <h3>Custom Bot Instructions</h3>
+            <div className="settings-field">
+              <label>Define custom system instructions to guide the bot's tone or persona. Be sure to select the "Custom" persona from the top navbar to apply it.</label>
+              <textarea
+                value={customPrompt}
+                onChange={(e) => setCustomPrompt(e.target.value)}
+                placeholder="e.g., You are a friendly coding mentor..."
+                className="settings-textarea"
+                rows={3}
+              />
             </div>
           </div>
         </div>
