@@ -101,7 +101,31 @@ router.post("/chat", async(req, res) => {
     }
 });
 
+// Rename thread
+router.put("/thread/:threadId", async (req, res) => {
+    const {threadId} = req.params;
+    const {title} = req.body;
 
+    if (!title) {
+        return res.status(400).json({error: "Title is required"});
+    }
 
+    try {
+        const updatedThread = await Thread.findOneAndUpdate(
+            {threadId},
+            {title},
+            {new: true}
+        );
+
+        if (!updatedThread) {
+            return res.status(404).json({error: "Thread not found"});
+        }
+
+        res.json({success: "Thread title updated", thread: updatedThread});
+    } catch(err) {
+        console.log(err);
+        res.status(500).json({error: "Failed to update thread title"});
+    }
+});
 
 export default router;
