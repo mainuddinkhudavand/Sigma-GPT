@@ -46,6 +46,21 @@ function App() {
     localStorage.setItem("sigmagpt-custom-prompt", customPrompt);
   }, [customPrompt]);
 
+  // Handle keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.ctrlKey && e.key === ",") {
+        e.preventDefault();
+        setIsSettingsOpen(prev => !prev);
+      }
+      if (e.key === "Escape") {
+        setIsSettingsOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   const providerValues = {
     prompt, setPrompt,
     reply, setReply,
