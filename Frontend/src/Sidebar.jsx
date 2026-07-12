@@ -67,6 +67,15 @@ function Sidebar() {
         }
     }
 
+    const handleRename = async (threadId) => {
+        if (!tempTitle.trim()) {
+            setEditingThreadId(null);
+            return;
+        }
+        setAllThreads(prev => prev.map(t => t.threadId === threadId ? { ...t, title: tempTitle } : t));
+        setEditingThreadId(null);
+    };
+
     return (
         <section className="sidebar">
             <div className="sidebar-header">
@@ -96,16 +105,55 @@ function Sidebar() {
                         thread.title?.toLowerCase().includes(searchQuery.toLowerCase())
                     ).map((thread, idx) => (
                         <li key={idx} 
-                            onClick={(e) => changeThread(thread.threadId)}
+                            onClick={(e) => {
+                                if (editingThreadId !== thread.threadId) {
+                                    changeThread(thread.threadId);
+                                }
+                            }}
+                            onDoubleClick={(e) => {
+                                e.stopPropagation();
+                                setEditingThreadId(thread.threadId);
+                                setTempTitle(thread.title);
+                            }}
                             className={thread.threadId === currThreadId ? "highlighted": " "}
                         >
-                            {thread.title}
-                            <i className="fa-solid fa-trash"
-                                onClick={(e) => {
-                                    e.stopPropagation(); //stop event bubbling
-                                    deleteThread(thread.threadId);
-                                }}
-                            ></i>
+                            {editingThreadId === thread.threadId ? (
+                                <input
+                                    type="text"
+                                    value={tempTitle}
+                                    onChange={(e) => setTempTitle(e.target.value)}
+                                    onBlur={() => handleRename(thread.threadId)}
+                                    onKeyDown={(e) => {
+                                        if (e.key === "Enter") {
+                                            handleRename(thread.threadId);
+                                        } else if (e.key === "Escape") {
+                                            setEditingThreadId(null);
+                                        }
+                                    }}
+                                    autoFocus
+                                    className="edit-title-input"
+                                    onClick={(e) => e.stopPropagation()}
+                                />
+                            ) : (
+                                <>
+                                    <span className="thread-title-text">{thread.title}</span>
+                                    <div className="thread-actions">
+                                        <i className="fa-solid fa-pen-to-square edit-icon"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setEditingThreadId(thread.threadId);
+                                                setTempTitle(thread.title);
+                                            }}
+                                        ></i>
+                                        <i className="fa-solid fa-trash"
+                                            onClick={(e) => {
+                                                e.stopPropagation(); //stop event bubbling
+                                                deleteThread(thread.threadId);
+                                            }}
+                                        ></i>
+                                    </div>
+                                </>
+                            )}
                         </li>
                     ))
                 }
