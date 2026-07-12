@@ -6,6 +6,8 @@ import {v1 as uuidv1} from "uuid";
 function Sidebar() {
     const {allThreads, setAllThreads, currThreadId, setNewChat, setPrompt, setReply, setCurrThreadId, setPrevChats, isSidebarOpen, setIsSidebarOpen} = useContext(MyContext);
     const [searchQuery, setSearchQuery] = useState("");
+    const [editingThreadId, setEditingThreadId] = useState(null);
+    const [tempTitle, setTempTitle] = useState("");
 
     const getAllThreads = async () => {
         try {
