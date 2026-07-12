@@ -19,6 +19,39 @@ const CopyButton = ({ text }) => {
     );
 };
 
+const SpeakButton = ({ text }) => {
+    const [speaking, setSpeaking] = useState(false);
+
+    useEffect(() => {
+        return () => {
+            window.speechSynthesis.cancel();
+        };
+    }, []);
+
+    const toggleSpeech = (e) => {
+        e.stopPropagation();
+        if (speaking) {
+            window.speechSynthesis.cancel();
+            setSpeaking(false);
+        } else {
+            window.speechSynthesis.cancel();
+            // Clean markdown tags for clearer speech
+            const cleanText = text.replace(/[*#`_\-]/g, '').replace(/\[(.*?)\]\(.*?\)/g, '$1');
+            const utterance = new SpeechSynthesisUtterance(cleanText);
+            utterance.onend = () => setSpeaking(false);
+            utterance.onerror = () => setSpeaking(false);
+            window.speechSynthesis.speak(utterance);
+            setSpeaking(true);
+        }
+    };
+
+    return (
+        <button className="speak-msg-btn" onClick={toggleSpeech} title={speaking ? "Stop reading" : "Read aloud"}>
+            {speaking ? <i className="fa-solid fa-volume-xmark"></i> : <i className="fa-solid fa-volume-high"></i>}
+        </button>
+    );
+};
+
 const CopyCodeButton = ({ text }) => {
     const [copied, setCopied] = useState(false);
     const triggerCopy = (e) => {
