@@ -239,6 +239,32 @@
   filter: brightness(1.1);
 }
 
+.danger-zone h3 {
+  color: #ff4757 !important;
+  border-bottom-color: rgba(255, 71, 87, 0.2) !important;
+}
+
+.clear-all-btn {
+  background-color: #ff4757 !important;
+  color: #fff !important;
+  border: none !important;
+  padding: 10px 16px !important;
+  border-radius: 8px !important;
+  cursor: pointer !important;
+  font-weight: 600 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin: 4px 0 0 0 !important;
+  width: fit-content !important;
+  transition: background-color 0.2s, transform 0.2s !important;
+}
+
+.clear-all-btn:hover {
+  background-color: #ff2e44 !important;
+  transform: translateY(-1px) !important;
+}
+
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }

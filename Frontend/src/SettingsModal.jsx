@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import "./SettingsModal.css";
 import { MyContext, THEMES } from "./MyContext.jsx";
+import { v1 as uuidv1 } from "uuid";
 
 function SettingsModal() {
   const {
@@ -13,12 +14,32 @@ function SettingsModal() {
     customPrompt,
     setCustomPrompt,
     isSettingsOpen,
-    setIsSettingsOpen
+    setIsSettingsOpen,
+    setAllThreads,
+    setNewChat,
+    setPrompt,
+    setReply,
+    setCurrThreadId,
+    setPrevChats
   } = useContext(MyContext);
 
   if (!isSettingsOpen) return null;
 
   const handleClose = () => {
+    setIsSettingsOpen(false);
+  };
+
+  const handleClearAll = async () => {
+    if (!window.confirm("Are you sure you want to permanently delete ALL conversations? This action cannot be undone.")) {
+      return;
+    }
+    // Backend API will be integrated in Step 33!
+    setAllThreads([]);
+    setPrompt("");
+    setReply(null);
+    setPrevChats([]);
+    setNewChat(true);
+    setCurrThreadId(uuidv1());
     setIsSettingsOpen(false);
   };
 
@@ -131,6 +152,16 @@ function SettingsModal() {
                 className="settings-textarea"
                 rows={3}
               />
+          </div>
+
+          {/* Danger Zone Section */}
+          <div className="settings-section danger-zone">
+            <h3>Danger Zone</h3>
+            <div className="settings-field">
+              <label>Permanently delete all of your chat threads and message history. This cannot be undone.</label>
+              <button className="clear-all-btn" onClick={handleClearAll}>
+                <i className="fa-solid fa-trash-can"></i> Clear All Conversations
+              </button>
             </div>
           </div>
         </div>
