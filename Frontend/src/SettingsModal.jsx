@@ -160,6 +160,34 @@ function SettingsModal() {
                 className="settings-textarea"
                 rows={3}
               />
+            </div>
+          </div>
+
+          {/* Keyboard Shortcuts Section */}
+          <div className="settings-section">
+            <h3>Keyboard Shortcuts</h3>
+            <div className="shortcuts-list">
+              <div className="shortcut-item">
+                <span className="shortcut-key">Ctrl + ,</span>
+                <span className="shortcut-desc">Open / Close Settings</span>
+              </div>
+              <div className="shortcut-item">
+                <span className="shortcut-key">Esc</span>
+                <span className="shortcut-desc">Close Modals</span>
+              </div>
+              <div className="shortcut-item">
+                <span className="shortcut-key">Enter</span>
+                <span className="shortcut-desc">Send message</span>
+              </div>
+              <div className="shortcut-item">
+                <span className="shortcut-key">Shift + Enter</span>
+                <span className="shortcut-desc">Add new line</span>
+              </div>
+              <div className="shortcut-item">
+                <span className="shortcut-key">Double Click</span>
+                <span className="shortcut-desc">Rename conversation</span>
+              </div>
+            </div>
           </div>
 
           {/* Danger Zone Section */}
