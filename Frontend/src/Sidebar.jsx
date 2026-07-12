@@ -72,8 +72,24 @@ function Sidebar() {
             setEditingThreadId(null);
             return;
         }
+        
+        // Optimistic UI update
         setAllThreads(prev => prev.map(t => t.threadId === threadId ? { ...t, title: tempTitle } : t));
         setEditingThreadId(null);
+
+        try {
+            const response = await fetch(`http://localhost:8080/api/thread/${threadId}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ title: tempTitle })
+            });
+            const res = await response.json();
+            console.log(res);
+        } catch(err) {
+            console.log("Failed to rename thread on backend:", err);
+        }
     };
 
     return (
