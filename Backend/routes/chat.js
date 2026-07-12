@@ -128,4 +128,15 @@ router.put("/thread/:threadId", async (req, res) => {
     }
 });
 
+// Clear all threads
+router.delete("/thread", async (req, res) => {
+    try {
+        await Thread.deleteMany({});
+        res.status(200).json({success: "All threads deleted successfully"});
+    } catch(err) {
+        console.log(err);
+        res.status(500).json({error: "Failed to clear conversations"});
+    }
+});
+
 export default router;
