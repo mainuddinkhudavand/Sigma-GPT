@@ -19,6 +19,7 @@ function App() {
   const [username, setUsername] = useState(localStorage.getItem("sigmagpt-username") || "Explorer");
   const [avatarColor, setAvatarColor] = useState(localStorage.getItem("sigmagpt-avatar-color") || "#339cff");
   const [persona, setPersona] = useState(localStorage.getItem("sigmagpt-persona") || "general");
+  const [customPrompt, setCustomPrompt] = useState(localStorage.getItem("sigmagpt-custom-prompt") || "You are an expert tutor who explains complex scientific concepts using simple analogies.");
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 768);
 
@@ -28,7 +29,7 @@ function App() {
     localStorage.setItem("sigmagpt-theme", theme);
   }, [theme]);
 
-  // Sync username, avatarColor, and persona to localStorage
+  // Sync username, avatarColor, persona, and customPrompt to localStorage
   useEffect(() => {
     localStorage.setItem("sigmagpt-username", username);
   }, [username]);
@@ -41,6 +42,10 @@ function App() {
     localStorage.setItem("sigmagpt-persona", persona);
   }, [persona]);
 
+  useEffect(() => {
+    localStorage.setItem("sigmagpt-custom-prompt", customPrompt);
+  }, [customPrompt]);
+
   const providerValues = {
     prompt, setPrompt,
     reply, setReply,
@@ -52,6 +57,7 @@ function App() {
     username, setUsername,
     avatarColor, setAvatarColor,
     persona, setPersona,
+    customPrompt, setCustomPrompt,
     isSettingsOpen, setIsSettingsOpen,
     isSidebarOpen, setIsSidebarOpen
   }; 
