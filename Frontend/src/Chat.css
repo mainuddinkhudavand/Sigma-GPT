@@ -1,28 +1,62 @@
 .chats {
-    max-width: 700px;
-    overflow-y: scroll;
-    padding: 8rem;
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
+    overflow-y: auto;
+    padding: 2rem 1.5rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    scroll-behavior: smooth;
 }
 
 .userDiv {
     display: flex;
     justify-content: flex-end;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+    animation: slideUp 0.3s ease-out;
 }
 
-
 .gptDiv {
-    text-align: left;
-    font-size: 0.9rem;
+    display: flex;
+    justify-content: flex-start;
+    font-size: 0.95rem;
+    animation: slideUp 0.3s ease-out;
 }
 
 .userMessage {
-    background-color: #323232;
-    padding: 10px 20px;
-    border-radius: 14px;
-    margin-left: 15rem;
-    max-width: 500px;
+    background-color: var(--bg-user-bubble) !important;
+    color: var(--text-primary) !important;
+    padding: 12px 18px !important;
+    border-radius: 18px !important;
+    border-top-right-radius: 4px !important;
+    max-width: 75%;
     width: fit-content;
+    box-shadow: var(--shadow-sm);
+    margin: 0 !important;
+}
+
+h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-top: auto;
+    margin-bottom: auto;
+    background: linear-gradient(135deg, var(--text-primary), var(--accent-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .hljs {
