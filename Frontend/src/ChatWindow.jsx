@@ -4,7 +4,7 @@ import { MyContext } from "./MyContext.jsx";
 import { useContext, useState, useEffect } from "react";
 
 function ChatWindow() {
-    const {prompt, setPrompt, reply, setReply, currThreadId, setPrevChats, setNewChat, persona, setPersona, setIsSettingsOpen, username, avatarColor, isSidebarOpen, setIsSidebarOpen} = useContext(MyContext);
+    const {prompt, setPrompt, reply, setReply, currThreadId, setPrevChats, setNewChat, persona, setPersona, customPrompt, setIsSettingsOpen, username, avatarColor, isSidebarOpen, setIsSidebarOpen} = useContext(MyContext);
     const [loading, setLoading] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
 
@@ -21,7 +21,8 @@ function ChatWindow() {
             body: JSON.stringify({
                 message: prompt,
                 threadId: currThreadId,
-                persona: persona
+                persona: persona,
+                customPrompt: customPrompt
             })
         };
 
@@ -91,6 +92,7 @@ function ChatWindow() {
                             <option value="coder">💻 Code Wizard</option>
                             <option value="writer">✍️ Creative Writer</option>
                             <option value="sarcastic">🤪 Sarcastic Buddy</option>
+                            <option value="custom">⚙️ Custom Bot</option>
                         </select>
                     </div>
                     {prevChats && prevChats.length > 0 && (
