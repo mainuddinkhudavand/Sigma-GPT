@@ -20,6 +20,7 @@ function App() {
   const [avatarColor, setAvatarColor] = useState(localStorage.getItem("sigmagpt-avatar-color") || "#339cff");
   const [persona, setPersona] = useState(localStorage.getItem("sigmagpt-persona") || "general");
   const [customPrompt, setCustomPrompt] = useState(localStorage.getItem("sigmagpt-custom-prompt") || "You are an expert tutor who explains complex scientific concepts using simple analogies.");
+  const [codeTheme, setCodeTheme] = useState(localStorage.getItem("sigmagpt-code-theme") || "github");
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 768);
 
@@ -45,6 +46,10 @@ function App() {
   useEffect(() => {
     localStorage.setItem("sigmagpt-custom-prompt", customPrompt);
   }, [customPrompt]);
+
+  useEffect(() => {
+    localStorage.setItem("sigmagpt-code-theme", codeTheme);
+  }, [codeTheme]);
 
   // Handle keyboard shortcuts
   useEffect(() => {
@@ -73,6 +78,7 @@ function App() {
     avatarColor, setAvatarColor,
     persona, setPersona,
     customPrompt, setCustomPrompt,
+    codeTheme, setCodeTheme,
     isSettingsOpen, setIsSettingsOpen,
     isSidebarOpen, setIsSidebarOpen
   }; 

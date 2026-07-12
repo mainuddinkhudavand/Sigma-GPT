@@ -109,6 +109,29 @@
   box-shadow: 0 0 0 2px var(--accent-glow);
 }
 
+.settings-select {
+  background-color: var(--bg-input);
+  border: 1px solid var(--border-color);
+  padding: 10px 14px;
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s;
+  cursor: pointer;
+  width: 100%;
+}
+
+.settings-select:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 2px var(--accent-glow);
+}
+
+.settings-select option {
+  background-color: var(--bg-sidebar);
+  color: var(--text-primary);
+}
+
 .settings-textarea {
   background-color: var(--bg-input);
   border: 1px solid var(--border-color);

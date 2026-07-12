@@ -13,6 +13,8 @@ function SettingsModal() {
     setAvatarColor,
     customPrompt,
     setCustomPrompt,
+    codeTheme,
+    setCodeTheme,
     isSettingsOpen,
     setIsSettingsOpen,
     setAllThreads,
@@ -160,6 +162,23 @@ function SettingsModal() {
                 className="settings-textarea"
                 rows={3}
               />
+            </div>
+          </div>
+
+          {/* Code Syntax Highlight theme selector */}
+          <div className="settings-section">
+            <h3>Code Block Theme</h3>
+            <div className="settings-field">
+              <label>Choose a syntax highlighting theme for rendered code blocks:</label>
+              <select
+                value={codeTheme}
+                onChange={(e) => setCodeTheme(e.target.value)}
+                className="settings-select"
+              >
+                <option value="github">GitHub Dark (Default)</option>
+                <option value="monokai">Monokai Classic</option>
+                <option value="cyberpunk">Cyberpunk Neon</option>
+              </select>
             </div>
           </div>
 
