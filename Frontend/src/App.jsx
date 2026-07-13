@@ -2,7 +2,7 @@ import './App.css';
 import Sidebar from "./Sidebar.jsx";
 import ChatWindow from "./ChatWindow.jsx";
 import SettingsModal from "./SettingsModal.jsx";
-import { MyContext } from "./MyContext.jsx";
+import { MyContext, THEMES } from "./MyContext.jsx";
 import { useState, useEffect } from 'react';
 import { v1 as uuidv1 } from "uuid";
 
@@ -14,13 +14,31 @@ function App() {
   const [newChat, setNewChat] = useState(true);
   const [allThreads, setAllThreads] = useState([]);
   
-  // Theme and User Customization States
-  const [theme, setTheme] = useState(localStorage.getItem("sigmagpt-theme") || "dark");
+  // Theme and User Customization States with defensive check
+  const getInitialTheme = () => {
+    const saved = localStorage.getItem("sigmagpt-theme");
+    const validThemes = Object.values(THEMES || {});
+    return saved && validThemes.includes(saved) ? saved : "dark";
+  };
+
+  const getInitialPersona = () => {
+    const saved = localStorage.getItem("sigmagpt-persona");
+    const validPersonas = ["general", "coder", "writer", "sarcastic", "custom"];
+    return saved && validPersonas.includes(saved) ? saved : "general";
+  };
+
+  const getInitialCodeTheme = () => {
+    const saved = localStorage.getItem("sigmagpt-code-theme");
+    const validCodeThemes = ["github", "monokai", "cyberpunk"];
+    return saved && validCodeThemes.includes(saved) ? saved : "github";
+  };
+
+  const [theme, setTheme] = useState(getInitialTheme);
   const [username, setUsername] = useState(localStorage.getItem("sigmagpt-username") || "Explorer");
   const [avatarColor, setAvatarColor] = useState(localStorage.getItem("sigmagpt-avatar-color") || "#339cff");
-  const [persona, setPersona] = useState(localStorage.getItem("sigmagpt-persona") || "general");
+  const [persona, setPersona] = useState(getInitialPersona);
   const [customPrompt, setCustomPrompt] = useState(localStorage.getItem("sigmagpt-custom-prompt") || "You are an expert tutor who explains complex scientific concepts using simple analogies.");
-  const [codeTheme, setCodeTheme] = useState(localStorage.getItem("sigmagpt-code-theme") || "github");
+  const [codeTheme, setCodeTheme] = useState(getInitialCodeTheme);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 768);
 
