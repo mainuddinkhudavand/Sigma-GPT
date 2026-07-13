@@ -4,7 +4,7 @@ import { MyContext } from "./MyContext.jsx";
 import { useContext, useState, useEffect } from "react";
 
 function ChatWindow() {
-    const {prompt, setPrompt, reply, setReply, currThreadId, setPrevChats, setNewChat, persona, setPersona, customPrompt, setIsSettingsOpen, username, avatarColor, isSidebarOpen, setIsSidebarOpen} = useContext(MyContext);
+    const {prompt, setPrompt, reply, setReply, currThreadId, prevChats, setPrevChats, setNewChat, persona, setPersona, customPrompt, setIsSettingsOpen, username, avatarColor, isSidebarOpen, setIsSidebarOpen} = useContext(MyContext);
     const [loading, setLoading] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
 
