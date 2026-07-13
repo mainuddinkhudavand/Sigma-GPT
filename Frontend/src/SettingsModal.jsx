@@ -27,6 +27,9 @@ function SettingsModal() {
 
   if (!isSettingsOpen) return null;
 
+  const totalThreads = allThreads ? allThreads.length : 0;
+  const totalMessages = allThreads ? allThreads.reduce((sum, t) => sum + (t.messages ? t.messages.length : 0), 0) : 0;
+
   const handleClose = () => {
     setIsSettingsOpen(false);
   };
@@ -205,6 +208,25 @@ function SettingsModal() {
               <div className="shortcut-item">
                 <span className="shortcut-key">Double Click</span>
                 <span className="shortcut-desc">Rename conversation</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Usage Analytics Section */}
+          <div className="settings-section">
+            <h3>Usage Analytics</h3>
+            <div className="stats-grid">
+              <div className="stats-card">
+                <span className="stats-num">{totalThreads}</span>
+                <span className="stats-label">Total Chats</span>
+              </div>
+              <div className="stats-card">
+                <span className="stats-num">{totalMessages}</span>
+                <span className="stats-label">Total Messages</span>
+              </div>
+              <div className="stats-card animate-theme">
+                <span className="stats-num" style={{ textTransform: "capitalize" }}>{theme}</span>
+                <span className="stats-label">Active Theme</span>
               </div>
             </div>
           </div>
