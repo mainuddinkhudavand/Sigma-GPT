@@ -1,0 +1,7 @@
+cd Backend
+npm install
+node server.js
+
+cd Frontend
+npm install
+npm run dev
