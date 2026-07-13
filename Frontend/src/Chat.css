@@ -168,3 +168,62 @@ pre {
     background-color: transparent !important;
     overflow-x: auto;
 }
+
+/* Code Syntax highlighting theme overrides */
+.code-theme-monokai .hljs {
+    background: #272822 !important;
+    color: #f8f8f2 !important;
+}
+.code-theme-monokai .hljs-keyword,
+.code-theme-monokai .hljs-selector-tag,
+.code-theme-monokai .hljs-literal,
+.code-theme-monokai .hljs-section,
+.code-theme-monokai .hljs-link {
+    color: #f92672 !important;
+}
+.code-theme-monokai .hljs-function .hljs-title,
+.code-theme-monokai .hljs-title {
+    color: #a6e22e !important;
+}
+.code-theme-monokai .hljs-string,
+.code-theme-monokai .hljs-attribute,
+.code-theme-monokai .hljs-symbol,
+.code-theme-monokai .hljs-bullet,
+.code-theme-monokai .hljs-addition {
+    color: #e6db74 !important;
+}
+.code-theme-monokai .hljs-number,
+.code-theme-monokai .hljs-regexp {
+    color: #ae81ff !important;
+}
+.code-theme-monokai .hljs-comment,
+.code-theme-monokai .hljs-quote,
+.code-theme-monokai .hljs-deletion {
+    color: #75715e !important;
+}
+
+/* Cyberpunk theme overrides */
+.code-theme-cyberpunk .hljs {
+    background: #0a0512 !important;
+    color: #00ffcc !important;
+}
+.code-theme-cyberpunk .hljs-keyword,
+.code-theme-cyberpunk .hljs-selector-tag {
+    color: #ff007f !important;
+    text-shadow: 0 0 4px rgba(255, 0, 127, 0.5);
+}
+.code-theme-cyberpunk .hljs-string {
+    color: #ffff00 !important;
+}
+.code-theme-cyberpunk .hljs-number,
+.code-theme-cyberpunk .hljs-regexp {
+    color: #9d4edd !important;
+}
+.code-theme-cyberpunk .hljs-comment {
+    color: #624f80 !important;
+    font-style: italic;
+}
+.code-theme-cyberpunk .hljs-title {
+    color: #00ffff !important;
+    text-shadow: 0 0 4px rgba(0, 255, 255, 0.5);
+}

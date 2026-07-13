@@ -1,5 +1,5 @@
 import "./Chat.css";
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useMemo } from "react";
 import { MyContext } from "./MyContext";
 import ReactMarkdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
@@ -67,7 +67,7 @@ const CopyCodeButton = ({ text }) => {
     );
 };
 
-const MarkdownComponents = {
+const createMarkdownComponents = (codeTheme) => ({
     code({ node, className, children, ...props }) {
         const match = /language-(\w+)/.exec(className || '');
         const codeText = String(children).replace(/\n$/, '');
@@ -75,7 +75,7 @@ const MarkdownComponents = {
         
         if (isBlock) {
             return (
-                <div className="code-container">
+                <div className={`code-container code-theme-${codeTheme || 'github'}`}>
                     <div className="code-header">
                         <span className="code-lang">{match ? match[1] : 'code'}</span>
                         <CopyCodeButton text={codeText} />
@@ -90,11 +90,12 @@ const MarkdownComponents = {
         }
         return <code className={className} {...props}>{children}</code>;
     }
-};
+});
 
 function Chat() {
-    const {newChat, prevChats, reply} = useContext(MyContext);
+    const {newChat, prevChats, reply, codeTheme} = useContext(MyContext);
     const [latestReply, setLatestReply] = useState(null);
+    const MarkdownComponents = useMemo(() => createMarkdownComponents(codeTheme), [codeTheme]);
 
     useEffect(() => {
         if(reply === null) {
