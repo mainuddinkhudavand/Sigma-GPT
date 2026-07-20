@@ -50,7 +50,7 @@ A premium, modern MERN-stack ChatGPT replica featuring an elegant UI design syst
    ```
 3. *(Optional)* Setup your API key by creating a `.env` file in the `/Backend` directory:
    ```env
-   OPENAI_API_KEY=your_actual_openai_api_key
+   GEMINI_API_KEY=your_actual_gemini_api_key
    ```
    *Note: If no API key is supplied, the server runs in **mock mode** showing custom simulated responses for testing.*
    *Note: If no MONGODB_URI is supplied, the server automatically starts an in-memory database using `mongodb-memory-server`.*
