@@ -28,10 +28,10 @@ const getGeminiAPIResponse = async(message, persona = "general", customPrompt = 
             prefix = `### 🤖 General Assistant Mode\n`;
         }
         
-        return `${prefix}Hello! This is a simulated response in mock mode. Set \`GEMINI_API_KEY\` in your \`Backend/.env\` file to use the real Gemini 1.5 Flash API.`;
+        return `${prefix}Hello! This is a simulated response in mock mode. Set \`GEMINI_API_KEY\` in your \`Backend/.env\` file to use the real Gemini 3.5 Flash API.`;
     }
 
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`;
     const options = {
         method: "POST",
         headers: {
