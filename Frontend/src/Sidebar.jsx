@@ -4,10 +4,16 @@ import { MyContext } from "./MyContext.jsx";
 import {v1 as uuidv1} from "uuid";
 
 function Sidebar() {
-    const {allThreads, setAllThreads, currThreadId, setNewChat, setPrompt, setReply, setCurrThreadId, setPrevChats, isSidebarOpen, setIsSidebarOpen} = useContext(MyContext);
+    const {allThreads, setAllThreads, currThreadId, setNewChat, setPrompt, setReply, setCurrThreadId, setPrevChats, isSidebarOpen, setIsSidebarOpen, logSearchQuery} = useContext(MyContext);
     const [searchQuery, setSearchQuery] = useState("");
     const [editingThreadId, setEditingThreadId] = useState(null);
     const [tempTitle, setTempTitle] = useState("");
+
+    const handleSearchSubmit = () => {
+        if (searchQuery.trim()) {
+            logSearchQuery(searchQuery);
+        }
+    };
 
     const getAllThreads = async () => {
         try {
@@ -111,6 +117,8 @@ function Sidebar() {
                     placeholder="Search chats..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === 'Enter') handleSearchSubmit(); }}
+                    onBlur={handleSearchSubmit}
                     className="search-input"
                 />
             </div>
