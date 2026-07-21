@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import "./SettingsModal.css";
 import { MyContext, THEMES } from "./MyContext.jsx";
 import { v1 as uuidv1 } from "uuid";
@@ -9,14 +9,23 @@ function SettingsModal() {
     setTheme,
     username,
     setUsername,
+    email,
+    setEmail,
+    bio,
+    setBio,
     avatarColor,
     setAvatarColor,
+    saveProfileBackend,
+    searchHistory,
+    deleteSearchHistoryItem,
+    clearAllSearchHistory,
     customPrompt,
     setCustomPrompt,
     codeTheme,
     setCodeTheme,
     isSettingsOpen,
     setIsSettingsOpen,
+    allThreads,
     setAllThreads,
     setNewChat,
     setPrompt,
@@ -25,25 +34,34 @@ function SettingsModal() {
     setPrevChats
   } = useContext(MyContext);
 
+  const [activeTab, setActiveTab] = useState("profile");
+  const [saveStatus, setSaveStatus] = useState("");
+
   if (!isSettingsOpen) return null;
 
   const totalThreads = allThreads ? allThreads.length : 0;
   const totalMessages = allThreads ? allThreads.reduce((sum, t) => sum + (t.messages ? t.messages.length : 0), 0) : 0;
+  const totalSearches = searchHistory ? searchHistory.length : 0;
 
   const handleClose = () => {
     setIsSettingsOpen(false);
+    setSaveStatus("");
   };
 
-  const handleClearAll = async () => {
+  const handleSaveProfile = () => {
+    saveProfileBackend({ username, email, bio, avatarColor });
+    setSaveStatus("Profile saved successfully!");
+    setTimeout(() => setSaveStatus(""), 3000);
+  };
+
+  const handleClearAllConversations = async () => {
     if (!window.confirm("Are you sure you want to permanently delete ALL conversations? This action cannot be undone.")) {
       return;
     }
     
     try {
       const response = await fetch("http://localhost:8080/api/thread", { method: "DELETE" });
-      const res = await response.json();
-      console.log(res);
-
+      await response.json();
       setAllThreads([]);
       setPrompt("");
       setReply(null);
@@ -70,184 +88,371 @@ function SettingsModal() {
   return (
     <div className="settings-overlay" onClick={handleClose}>
       <div className="settings-modal" onClick={(e) => e.stopPropagation()}>
+        
+        {/* Header */}
         <div className="settings-header">
-          <h2>SigmaGPT Settings</h2>
-          <button className="close-btn" onClick={handleClose}>
+          <div className="header-title">
+            <i className="fa-solid fa-user-gear header-icon"></i>
+            <h2>SigmaGPT Control Center</h2>
+          </div>
+          <button className="close-btn" onClick={handleClose} title="Close Settings">
             <i className="fa-solid fa-xmark"></i>
           </button>
         </div>
 
-        <div className="settings-body">
-          {/* Profile Customization Section */}
-          <div className="settings-section">
-            <h3>Profile Customization</h3>
-            <div className="settings-field">
-              <label>Display Name</label>
-              <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Enter your name..."
-                className="settings-input"
-              />
-            </div>
-            
-            <div className="settings-field">
-              <label>Avatar Color</label>
-              <div className="color-presets">
-                {presetColors.map((color) => (
-                  <button
-                    key={color}
-                    className={`color-bubble ${avatarColor === color ? "active" : ""}`}
-                    style={{ backgroundColor: color }}
-                    onClick={() => setAvatarColor(color)}
+        {/* Modal Container with Sidebar Navigation & Tab Content */}
+        <div className="settings-container">
+          
+          {/* Navigation Sidebar */}
+          <nav className="settings-nav">
+            <button 
+              className={`nav-tab ${activeTab === "profile" ? "active" : ""}`}
+              onClick={() => setActiveTab("profile")}
+            >
+              <i className="fa-solid fa-user"></i>
+              <span>User Profile</span>
+            </button>
+
+            <button 
+              className={`nav-tab ${activeTab === "preferences" ? "active" : ""}`}
+              onClick={() => setActiveTab("preferences")}
+            >
+              <i className="fa-solid fa-sliders"></i>
+              <span>Preferences</span>
+            </button>
+
+            <button 
+              className={`nav-tab ${activeTab === "history" ? "active" : ""}`}
+              onClick={() => setActiveTab("history")}
+            >
+              <i className="fa-solid fa-clock-rotate-left"></i>
+              <span>Search History</span>
+              {totalSearches > 0 && <span className="tab-badge">{totalSearches}</span>}
+            </button>
+
+            <button 
+              className={`nav-tab ${activeTab === "analytics" ? "active" : ""}`}
+              onClick={() => setActiveTab("analytics")}
+            >
+              <i className="fa-solid fa-chart-pie"></i>
+              <span>Analytics</span>
+            </button>
+
+            <button 
+              className={`nav-tab danger ${activeTab === "danger" ? "active" : ""}`}
+              onClick={() => setActiveTab("danger")}
+            >
+              <i className="fa-solid fa-triangle-exclamation"></i>
+              <span>Danger Zone</span>
+            </button>
+          </nav>
+
+          {/* Main Content Area */}
+          <div className="settings-content">
+
+            {/* TAB 1: User Profile */}
+            {activeTab === "profile" && (
+              <div className="tab-pane animate-fade-in">
+                <div className="pane-header">
+                  <h3>User Profile</h3>
+                  <p>Manage your account identity, display name, and avatar styling.</p>
+                </div>
+
+                <div className="profile-preview-card">
+                  <div className="profile-avatar-large" style={{ backgroundColor: avatarColor }}>
+                    {username ? username.charAt(0).toUpperCase() : "U"}
+                  </div>
+                  <div className="profile-info-summary">
+                    <h4>{username || "Explorer"}</h4>
+                    <p>{email || "No email set"}</p>
+                    <span className="profile-bio-preview">"{bio || "No bio provided"}"</span>
+                  </div>
+                </div>
+
+                <div className="settings-field">
+                  <label><i className="fa-solid fa-signature"></i> Display Name</label>
+                  <input
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="Enter your name..."
+                    className="settings-input"
                   />
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Theme Settings Section */}
-          <div className="settings-section">
-            <h3>Visual Style</h3>
-            <div className="theme-grid">
-              <div
-                className={`theme-card dark ${theme === THEMES.DARK ? "active" : ""}`}
-                onClick={() => setTheme(THEMES.DARK)}
-              >
-                <div className="theme-preview" style={{ backgroundColor: "#131314" }}>
-                  <span className="dot" style={{ backgroundColor: "#339cff" }}></span>
                 </div>
-                <span>Sleek Dark</span>
-              </div>
 
-              <div
-                className={`theme-card cyberpunk ${theme === THEMES.CYBERPUNK ? "active" : ""}`}
-                onClick={() => setTheme(THEMES.CYBERPUNK)}
-              >
-                <div className="theme-preview" style={{ backgroundColor: "#0a0512" }}>
-                  <span className="dot" style={{ backgroundColor: "#ff007f" }}></span>
+                <div className="settings-field">
+                  <label><i className="fa-solid fa-envelope"></i> Email Address</label>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="user@example.com"
+                    className="settings-input"
+                  />
                 </div>
-                <span>Cyberpunk</span>
-              </div>
 
-              <div
-                className={`theme-card glassmorphism ${theme === THEMES.GLASSMORPHISM ? "active" : ""}`}
-                onClick={() => setTheme(THEMES.GLASSMORPHISM)}
-              >
-                <div className="theme-preview" style={{ backgroundColor: "#0f172a", border: "1px solid rgba(255,255,255,0.1)" }}>
-                  <span className="dot" style={{ backgroundColor: "#38bdf8" }}></span>
+                <div className="settings-field">
+                  <label><i className="fa-solid fa-quote-left"></i> About & Bio</label>
+                  <textarea
+                    value={bio}
+                    onChange={(e) => setBio(e.target.value)}
+                    placeholder="Write a brief tagline or bio..."
+                    className="settings-textarea"
+                    rows={2}
+                  />
                 </div>
-                <span>Glassmorphism</span>
-              </div>
 
-              <div
-                className={`theme-card emerald ${theme === THEMES.EMERALD ? "active" : ""}`}
-                onClick={() => setTheme(THEMES.EMERALD)}
-              >
-                <div className="theme-preview" style={{ backgroundColor: "#0b1511" }}>
-                  <span className="dot" style={{ backgroundColor: "#10b981" }}></span>
+                <div className="settings-field">
+                  <label><i className="fa-solid fa-palette"></i> Avatar Accent Color</label>
+                  <div className="color-presets">
+                    {presetColors.map((color) => (
+                      <button
+                        key={color}
+                        className={`color-bubble ${avatarColor === color ? "active" : ""}`}
+                        style={{ backgroundColor: color }}
+                        onClick={() => setAvatarColor(color)}
+                        title={color}
+                      />
+                    ))}
+                    <input
+                      type="color"
+                      value={avatarColor}
+                      onChange={(e) => setAvatarColor(e.target.value)}
+                      className="custom-color-picker"
+                      title="Choose custom color"
+                    />
+                  </div>
                 </div>
-                <span>Emerald Forest</span>
-              </div>
-            </div>
-          </div>
 
-          {/* Custom System prompt instructions */}
-          <div className="settings-section">
-            <h3>Custom Bot Instructions</h3>
-            <div className="settings-field">
-              <label>Define custom system instructions to guide the bot's tone or persona. Be sure to select the "Custom" persona from the top navbar to apply it.</label>
-              <textarea
-                value={customPrompt}
-                onChange={(e) => setCustomPrompt(e.target.value)}
-                placeholder="e.g., You are a friendly coding mentor..."
-                className="settings-textarea"
-                rows={3}
-              />
-            </div>
-          </div>
+                <div className="action-row">
+                  <button className="save-profile-btn" onClick={handleSaveProfile}>
+                    <i className="fa-solid fa-floppy-disk"></i> Save Profile
+                  </button>
+                  {saveStatus && <span className="save-status-msg"><i className="fa-solid fa-circle-check"></i> {saveStatus}</span>}
+                </div>
+              </div>
+            )}
 
-          {/* Code Syntax Highlight theme selector */}
-          <div className="settings-section">
-            <h3>Code Block Theme</h3>
-            <div className="settings-field">
-              <label>Choose a syntax highlighting theme for rendered code blocks:</label>
-              <select
-                value={codeTheme}
-                onChange={(e) => setCodeTheme(e.target.value)}
-                className="settings-select"
-              >
-                <option value="github">GitHub Dark (Default)</option>
-                <option value="monokai">Monokai Classic</option>
-                <option value="cyberpunk">Cyberpunk Neon</option>
-              </select>
-            </div>
-          </div>
+            {/* TAB 2: Preferences */}
+            {activeTab === "preferences" && (
+              <div className="tab-pane animate-fade-in">
+                <div className="pane-header">
+                  <h3>App Preferences</h3>
+                  <p>Customize theme aesthetics, bot personality, and editor styles.</p>
+                </div>
 
-          {/* Keyboard Shortcuts Section */}
-          <div className="settings-section">
-            <h3>Keyboard Shortcuts</h3>
-            <div className="shortcuts-list">
-              <div className="shortcut-item">
-                <span className="shortcut-key">Ctrl + ,</span>
-                <span className="shortcut-desc">Open / Close Settings</span>
-              </div>
-              <div className="shortcut-item">
-                <span className="shortcut-key">Esc</span>
-                <span className="shortcut-desc">Close Modals</span>
-              </div>
-              <div className="shortcut-item">
-                <span className="shortcut-key">Enter</span>
-                <span className="shortcut-desc">Send message</span>
-              </div>
-              <div className="shortcut-item">
-                <span className="shortcut-key">Shift + Enter</span>
-                <span className="shortcut-desc">Add new line</span>
-              </div>
-              <div className="shortcut-item">
-                <span className="shortcut-key">Double Click</span>
-                <span className="shortcut-desc">Rename conversation</span>
-              </div>
-            </div>
-          </div>
+                {/* Theme Selection */}
+                <div className="settings-section-block">
+                  <h4><i className="fa-solid fa-wand-magic-sparkles"></i> Visual Theme</h4>
+                  <div className="theme-grid">
+                    <div
+                      className={`theme-card dark ${theme === THEMES.DARK ? "active" : ""}`}
+                      onClick={() => setTheme(THEMES.DARK)}
+                    >
+                      <div className="theme-preview" style={{ backgroundColor: "#131314" }}>
+                        <span className="dot" style={{ backgroundColor: "#339cff" }}></span>
+                      </div>
+                      <span>Sleek Dark</span>
+                    </div>
 
-          {/* Usage Analytics Section */}
-          <div className="settings-section">
-            <h3>Usage Analytics</h3>
-            <div className="stats-grid">
-              <div className="stats-card">
-                <span className="stats-num">{totalThreads}</span>
-                <span className="stats-label">Total Chats</span>
-              </div>
-              <div className="stats-card">
-                <span className="stats-num">{totalMessages}</span>
-                <span className="stats-label">Total Messages</span>
-              </div>
-              <div className="stats-card animate-theme">
-                <span className="stats-num" style={{ textTransform: "capitalize" }}>{theme}</span>
-                <span className="stats-label">Active Theme</span>
-              </div>
-            </div>
-          </div>
+                    <div
+                      className={`theme-card cyberpunk ${theme === THEMES.CYBERPUNK ? "active" : ""}`}
+                      onClick={() => setTheme(THEMES.CYBERPUNK)}
+                    >
+                      <div className="theme-preview" style={{ backgroundColor: "#0a0512" }}>
+                        <span className="dot" style={{ backgroundColor: "#ff007f" }}></span>
+                      </div>
+                      <span>Cyberpunk</span>
+                    </div>
 
-          {/* Danger Zone Section */}
-          <div className="settings-section danger-zone">
-            <h3>Danger Zone</h3>
-            <div className="settings-field">
-              <label>Permanently delete all of your chat threads and message history. This cannot be undone.</label>
-              <button className="clear-all-btn" onClick={handleClearAll}>
-                <i className="fa-solid fa-trash-can"></i> Clear All Conversations
-              </button>
-            </div>
+                    <div
+                      className={`theme-card glassmorphism ${theme === THEMES.GLASSMORPHISM ? "active" : ""}`}
+                      onClick={() => setTheme(THEMES.GLASSMORPHISM)}
+                    >
+                      <div className="theme-preview" style={{ backgroundColor: "#0f172a", border: "1px solid rgba(255,255,255,0.1)" }}>
+                        <span className="dot" style={{ backgroundColor: "#38bdf8" }}></span>
+                      </div>
+                      <span>Glassmorphism</span>
+                    </div>
+
+                    <div
+                      className={`theme-card emerald ${theme === THEMES.EMERALD ? "active" : ""}`}
+                      onClick={() => setTheme(THEMES.EMERALD)}
+                    >
+                      <div className="theme-preview" style={{ backgroundColor: "#0b1511" }}>
+                        <span className="dot" style={{ backgroundColor: "#10b981" }}></span>
+                      </div>
+                      <span>Emerald Forest</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Custom Bot Instructions */}
+                <div className="settings-section-block">
+                  <h4><i className="fa-solid fa-robot"></i> Custom Bot Instructions</h4>
+                  <div className="settings-field">
+                    <label>Define custom system instructions to guide the bot's tone or persona. Select "Custom" persona from the top navbar to activate.</label>
+                    <textarea
+                      value={customPrompt}
+                      onChange={(e) => setCustomPrompt(e.target.value)}
+                      placeholder="e.g., You are a friendly coding mentor..."
+                      className="settings-textarea"
+                      rows={3}
+                    />
+                  </div>
+                </div>
+
+                {/* Code Theme */}
+                <div className="settings-section-block">
+                  <h4><i className="fa-solid fa-code"></i> Code Syntax Theme</h4>
+                  <div className="settings-field">
+                    <select
+                      value={codeTheme}
+                      onChange={(e) => setCodeTheme(e.target.value)}
+                      className="settings-select"
+                    >
+                      <option value="github">GitHub Dark (Default)</option>
+                      <option value="monokai">Monokai Classic</option>
+                      <option value="cyberpunk">Cyberpunk Neon</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Keyboard Shortcuts */}
+                <div className="settings-section-block">
+                  <h4><i className="fa-solid fa-keyboard"></i> Keyboard Shortcuts</h4>
+                  <div className="shortcuts-list">
+                    <div className="shortcut-item">
+                      <span className="shortcut-key">Ctrl + ,</span>
+                      <span className="shortcut-desc">Open / Close Settings</span>
+                    </div>
+                    <div className="shortcut-item">
+                      <span className="shortcut-key">Esc</span>
+                      <span className="shortcut-desc">Close Modals</span>
+                    </div>
+                    <div className="shortcut-item">
+                      <span className="shortcut-key">Enter</span>
+                      <span className="shortcut-desc">Send message</span>
+                    </div>
+                    <div className="shortcut-item">
+                      <span className="shortcut-key">Shift + Enter</span>
+                      <span className="shortcut-desc">Add new line</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* TAB 3: Search History */}
+            {activeTab === "history" && (
+              <div className="tab-pane animate-fade-in">
+                <div className="pane-header flex-header">
+                  <div>
+                    <h3>Search History</h3>
+                    <p>Review and manage your logged chat search queries saved in the database.</p>
+                  </div>
+                  {searchHistory && searchHistory.length > 0 && (
+                    <button className="clear-history-btn" onClick={clearAllSearchHistory}>
+                      <i className="fa-solid fa-trash-can"></i> Clear All History
+                    </button>
+                  )}
+                </div>
+
+                {searchHistory && searchHistory.length > 0 ? (
+                  <div className="search-history-list">
+                    {searchHistory.map((item) => (
+                      <div key={item._id || item.timestamp} className="history-item-card">
+                        <div className="history-item-content">
+                          <i className="fa-solid fa-magnifying-glass history-icon"></i>
+                          <span className="history-query">{item.query}</span>
+                        </div>
+                        <div className="history-item-actions">
+                          <span className="history-time">
+                            {new Date(item.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          </span>
+                          <button 
+                            className="delete-history-btn" 
+                            onClick={() => deleteSearchHistoryItem(item._id)}
+                            title="Delete query"
+                          >
+                            <i className="fa-solid fa-xmark"></i>
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="empty-history-state">
+                    <i className="fa-solid fa-clock-rotate-left empty-icon"></i>
+                    <p>No search history recorded yet.</p>
+                    <small>Search for chat titles in the sidebar to log your searches here.</small>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* TAB 4: Analytics */}
+            {activeTab === "analytics" && (
+              <div className="tab-pane animate-fade-in">
+                <div className="pane-header">
+                  <h3>Usage Analytics</h3>
+                  <p>Real-time statistics on your chat threads, messages, and theme settings.</p>
+                </div>
+
+                <div className="stats-grid">
+                  <div className="stats-card">
+                    <i className="fa-solid fa-comments stats-card-icon"></i>
+                    <span className="stats-num">{totalThreads}</span>
+                    <span className="stats-label">Total Chats</span>
+                  </div>
+                  <div className="stats-card">
+                    <i className="fa-solid fa-paper-plane stats-card-icon"></i>
+                    <span className="stats-num">{totalMessages}</span>
+                    <span className="stats-label">Total Messages</span>
+                  </div>
+                  <div className="stats-card">
+                    <i className="fa-solid fa-magnifying-glass stats-card-icon"></i>
+                    <span className="stats-num">{totalSearches}</span>
+                    <span className="stats-label">Logged Searches</span>
+                  </div>
+                  <div className="stats-card animate-theme">
+                    <i className="fa-solid fa-palette stats-card-icon"></i>
+                    <span className="stats-num" style={{ textTransform: "capitalize" }}>{theme}</span>
+                    <span className="stats-label">Active Theme</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* TAB 5: Danger Zone */}
+            {activeTab === "danger" && (
+              <div className="tab-pane animate-fade-in">
+                <div className="pane-header">
+                  <h3 className="danger-title">Danger Zone</h3>
+                  <p>Irreversible actions that affect your stored chat history and database records.</p>
+                </div>
+
+                <div className="danger-box">
+                  <div className="danger-info">
+                    <h4>Delete All Conversations</h4>
+                    <p>Permanently truncate all stored conversation threads and message logs in MongoDB. This action cannot be undone.</p>
+                  </div>
+                  <button className="clear-all-btn" onClick={handleClearAllConversations}>
+                    <i className="fa-solid fa-trash-can"></i> Clear All Conversations
+                  </button>
+                </div>
+              </div>
+            )}
+
           </div>
         </div>
 
+        {/* Footer */}
         <div className="settings-footer">
           <p className="db-status">
-            <i className="fa-solid fa-circle-check"></i> Database Connection Active
+            <i className="fa-solid fa-database"></i> Connected with Database & Search Service
           </p>
-          <button className="save-btn" onClick={handleClose}>
+          <button className="done-btn" onClick={handleClose}>
             Done
           </button>
         </div>
