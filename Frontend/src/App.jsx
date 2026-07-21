@@ -35,12 +35,99 @@ function App() {
 
   const [theme, setTheme] = useState(getInitialTheme);
   const [username, setUsername] = useState(localStorage.getItem("sigmagpt-username") || "Explorer");
+  const [email, setEmail] = useState(localStorage.getItem("sigmagpt-email") || "");
+  const [bio, setBio] = useState(localStorage.getItem("sigmagpt-bio") || "Exploring the AI cosmos with SigmaGPT.");
   const [avatarColor, setAvatarColor] = useState(localStorage.getItem("sigmagpt-avatar-color") || "#339cff");
+  const [searchHistory, setSearchHistory] = useState([]);
   const [persona, setPersona] = useState(getInitialPersona);
   const [customPrompt, setCustomPrompt] = useState(localStorage.getItem("sigmagpt-custom-prompt") || "You are an expert tutor who explains complex scientific concepts using simple analogies.");
   const [codeTheme, setCodeTheme] = useState(getInitialCodeTheme);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 768);
+
+  // Sync profile from backend database
+  const fetchProfile = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/api/profile");
+      if (response.ok) {
+        const data = await response.json();
+        if (data.username) setUsername(data.username);
+        if (data.email !== undefined) setEmail(data.email);
+        if (data.bio !== undefined) setBio(data.bio);
+        if (data.avatarColor) setAvatarColor(data.avatarColor);
+      }
+    } catch (err) {
+      console.log("Using local storage fallback for user profile:", err);
+    }
+  };
+
+  const saveProfileBackend = async (updatedData) => {
+    try {
+      await fetch("http://localhost:8080/api/profile", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updatedData)
+      });
+    } catch (err) {
+      console.error("Failed to sync profile to backend:", err);
+    }
+  };
+
+  // Sync search history from backend database
+  const fetchSearchHistory = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/api/search-history");
+      if (response.ok) {
+        const data = await response.json();
+        setSearchHistory(data);
+      }
+    } catch (err) {
+      console.error("Failed to fetch search history:", err);
+    }
+  };
+
+  const logSearchQuery = async (query) => {
+    if (!query || !query.trim()) return;
+    try {
+      const response = await fetch("http://localhost:8080/api/search-history", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query: query.trim() })
+      });
+      if (response.ok) {
+        fetchSearchHistory();
+      }
+    } catch (err) {
+      console.error("Failed to log search query:", err);
+    }
+  };
+
+  const deleteSearchHistoryItem = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/search-history/${id}`, { method: "DELETE" });
+      if (response.ok) {
+        setSearchHistory(prev => prev.filter(item => item._id !== id));
+      }
+    } catch (err) {
+      console.error("Failed to delete search history item:", err);
+    }
+  };
+
+  const clearAllSearchHistory = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/api/search-history", { method: "DELETE" });
+      if (response.ok) {
+        setSearchHistory([]);
+      }
+    } catch (err) {
+      console.error("Failed to clear search history:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchProfile();
+    fetchSearchHistory();
+  }, []);
 
   // Sync theme attribute with document element
   useEffect(() => {
@@ -48,10 +135,18 @@ function App() {
     localStorage.setItem("sigmagpt-theme", theme);
   }, [theme]);
 
-  // Sync username, avatarColor, persona, and customPrompt to localStorage
+  // Sync username, avatarColor, email, bio to localStorage
   useEffect(() => {
     localStorage.setItem("sigmagpt-username", username);
   }, [username]);
+
+  useEffect(() => {
+    localStorage.setItem("sigmagpt-email", email);
+  }, [email]);
+
+  useEffect(() => {
+    localStorage.setItem("sigmagpt-bio", bio);
+  }, [bio]);
 
   useEffect(() => {
     localStorage.setItem("sigmagpt-avatar-color", avatarColor);
@@ -93,7 +188,13 @@ function App() {
     allThreads, setAllThreads,
     theme, setTheme,
     username, setUsername,
+    email, setEmail,
+    bio, setBio,
     avatarColor, setAvatarColor,
+    saveProfileBackend,
+    searchHistory, setSearchHistory,
+    fetchSearchHistory, logSearchQuery,
+    deleteSearchHistoryItem, clearAllSearchHistory,
     persona, setPersona,
     customPrompt, setCustomPrompt,
     codeTheme, setCodeTheme,
