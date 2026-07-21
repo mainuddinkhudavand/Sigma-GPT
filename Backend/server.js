@@ -3,6 +3,8 @@ import "dotenv/config";
 import cors from "cors";
 import mongoose from "mongoose";
 import chatRoutes from "./routes/chat.js";
+import profileRoutes from "./routes/profile.js";
+import searchHistoryRoutes from "./routes/searchHistory.js";
 import { MongoMemoryServer } from "mongodb-memory-server";
 
 const app = express();
@@ -12,6 +14,8 @@ app.use(express.json());
 app.use(cors());
 
 app.use("/api", chatRoutes);
+app.use("/api", profileRoutes);
+app.use("/api", searchHistoryRoutes);
 
 app.listen(PORT, () => {
     console.log(`server running on ${PORT}`);
