@@ -31,7 +31,12 @@ function SettingsModal() {
     setPrompt,
     setReply,
     setCurrThreadId,
-    setPrevChats
+    setPrevChats,
+    userPlan,
+    setIsUpgradeOpen,
+    isLoggedIn,
+    setIsLoginOpen,
+    handleLogout
   } = useContext(MyContext);
 
   const [activeTab, setActiveTab] = useState("profile");
@@ -163,9 +168,14 @@ function SettingsModal() {
                     {username ? username.charAt(0).toUpperCase() : "U"}
                   </div>
                   <div className="profile-info-summary">
-                    <h4>{username || "Explorer"}</h4>
+                    <h4>{username || "Explorer"} <span className="membership-pill">{userPlan} Plan</span></h4>
                     <p>{email || "No email set"}</p>
                     <span className="profile-bio-preview">"{bio || "No bio provided"}"</span>
+                  </div>
+                  <div className="profile-quick-actions">
+                    <button className="upgrade-pill-btn" onClick={() => { setIsSettingsOpen(false); setIsUpgradeOpen(true); }}>
+                      <i className="fa-solid fa-crown"></i> Upgrade
+                    </button>
                   </div>
                 </div>
 
@@ -228,6 +238,17 @@ function SettingsModal() {
                   <button className="save-profile-btn" onClick={handleSaveProfile}>
                     <i className="fa-solid fa-floppy-disk"></i> Save Profile
                   </button>
+
+                  {isLoggedIn ? (
+                    <button className="logout-profile-btn" onClick={() => { handleLogout(); setIsSettingsOpen(false); }}>
+                      <i className="fa-solid fa-arrow-right-from-bracket"></i> Log Out
+                    </button>
+                  ) : (
+                    <button className="login-profile-btn" onClick={() => { setIsLoginOpen(true); setIsSettingsOpen(false); }}>
+                      <i className="fa-solid fa-right-to-bracket"></i> Sign In / 1st Login
+                    </button>
+                  )}
+
                   {saveStatus && <span className="save-status-msg"><i className="fa-solid fa-circle-check"></i> {saveStatus}</span>}
                 </div>
               </div>

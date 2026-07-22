@@ -4,11 +4,22 @@ import { MyContext } from "./MyContext.jsx";
 import { useContext, useState, useEffect } from "react";
 
 function ChatWindow() {
-    const {prompt, setPrompt, reply, setReply, currThreadId, prevChats, setPrevChats, setNewChat, persona, setPersona, customPrompt, setIsSettingsOpen, username, avatarColor, isSidebarOpen, setIsSidebarOpen} = useContext(MyContext);
+    const {
+        prompt, setPrompt, reply, setReply, currThreadId, prevChats, setPrevChats, 
+        setNewChat, persona, setPersona, customPrompt, setIsSettingsOpen, username, 
+        avatarColor, isSidebarOpen, setIsSidebarOpen, isLoggedIn, setIsLoginOpen, 
+        userPlan, setIsUpgradeOpen, handleLogout
+    } = useContext(MyContext);
+    
     const [loading, setLoading] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
 
     const getReply = async () => {
+        if (!isLoggedIn) {
+            setIsLoginOpen(true);
+            return;
+        }
+
         setLoading(true);
         setNewChat(false);
 
@@ -101,18 +112,46 @@ function ChatWindow() {
                         </button>
                     )}
                 </div>
-                <div className="userIconDiv" onClick={handleProfileClick}>
-                    <span className="userIcon" style={{ backgroundColor: avatarColor, color: '#fff', fontWeight: 'bold' }} title={username}>
-                        {username ? username.charAt(0).toUpperCase() : 'U'}
-                    </span>
+                
+                <div className="nav-right">
+                    <button 
+                        className={`nav-plan-badge ${userPlan.toLowerCase() === 'pro' ? 'pro-badge' : userPlan.toLowerCase() === 'enterprise' ? 'enterprise-badge' : 'free-badge'}`}
+                        onClick={() => setIsUpgradeOpen(true)}
+                        title="Click to upgrade plan"
+                    >
+                        <i className="fa-solid fa-crown"></i> {userPlan}
+                    </button>
+
+                    <div className="userIconDiv" onClick={handleProfileClick}>
+                        <span className="userIcon" style={{ backgroundColor: avatarColor, color: '#fff', fontWeight: 'bold' }} title={username}>
+                            {username ? username.charAt(0).toUpperCase() : 'U'}
+                        </span>
+                    </div>
                 </div>
             </div>
             {
                 isOpen && 
                 <div className="dropDown">
-                    <div className="dropDownItem" onClick={() => { setIsSettingsOpen(true); setIsOpen(false); }}><i className="fa-solid fa-gear"></i> Settings</div>
-                    <div className="dropDownItem"><i className="fa-solid fa-cloud-arrow-up"></i> Upgrade plan</div>
-                    <div className="dropDownItem"><i className="fa-solid fa-arrow-right-from-bracket"></i> Log out</div>
+                    <div className="dropDownHeader">
+                        <strong>{username || "Explorer"}</strong>
+                        <small>{isLoggedIn ? (userPlan + " Member") : "Guest User"}</small>
+                    </div>
+                    <div className="dropDownDivider"></div>
+                    <div className="dropDownItem" onClick={() => { setIsSettingsOpen(true); setIsOpen(false); }}>
+                        <i className="fa-solid fa-gear"></i> Settings & Profile
+                    </div>
+                    <div className="dropDownItem" onClick={() => { setIsUpgradeOpen(true); setIsOpen(false); }}>
+                        <i className="fa-solid fa-cloud-arrow-up"></i> Upgrade plan
+                    </div>
+                    {isLoggedIn ? (
+                        <div className="dropDownItem danger-item" onClick={() => { handleLogout(); setIsOpen(false); }}>
+                            <i className="fa-solid fa-arrow-right-from-bracket"></i> Log out
+                        </div>
+                    ) : (
+                        <div className="dropDownItem primary-item" onClick={() => { setIsLoginOpen(true); setIsOpen(false); }}>
+                            <i className="fa-solid fa-right-to-bracket"></i> Sign In / 1st Login
+                        </div>
+                    )}
                 </div>
             }
             <Chat></Chat>
