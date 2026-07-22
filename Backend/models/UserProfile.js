@@ -16,9 +16,18 @@ const UserProfileSchema = new mongoose.Schema({
     avatarColor: {
         type: String,
         default: "#339cff"
+    },
+    plan: {
+        type: String,
+        default: "Free"
+    },
+    isLoggedIn: {
+        type: Boolean,
+        default: false
     }
 }, {
     timestamps: true
 });
 
 export default mongoose.model("UserProfile", UserProfileSchema);
+

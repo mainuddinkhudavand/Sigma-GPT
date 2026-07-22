@@ -12,7 +12,9 @@ router.get("/profile", async (req, res) => {
                 username: "Explorer",
                 email: "",
                 bio: "Exploring the AI cosmos with SigmaGPT.",
-                avatarColor: "#339cff"
+                avatarColor: "#339cff",
+                plan: "Free",
+                isLoggedIn: false
             });
             await profile.save();
         }
@@ -25,16 +27,18 @@ router.get("/profile", async (req, res) => {
 
 // Update profile
 router.put("/profile", async (req, res) => {
-    const { username, email, bio, avatarColor } = req.body;
+    const { username, email, bio, avatarColor, plan, isLoggedIn } = req.body;
     try {
         let profile = await UserProfile.findOne({});
         if (!profile) {
-            profile = new UserProfile({ username, email, bio, avatarColor });
+            profile = new UserProfile({ username, email, bio, avatarColor, plan, isLoggedIn });
         } else {
             if (username !== undefined) profile.username = username;
             if (email !== undefined) profile.email = email;
             if (bio !== undefined) profile.bio = bio;
             if (avatarColor !== undefined) profile.avatarColor = avatarColor;
+            if (plan !== undefined) profile.plan = plan;
+            if (isLoggedIn !== undefined) profile.isLoggedIn = isLoggedIn;
         }
         await profile.save();
         res.json({ success: "Profile updated successfully", profile });
