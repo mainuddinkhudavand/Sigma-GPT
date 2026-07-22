@@ -2,6 +2,8 @@ import './App.css';
 import Sidebar from "./Sidebar.jsx";
 import ChatWindow from "./ChatWindow.jsx";
 import SettingsModal from "./SettingsModal.jsx";
+import LoginModal from "./LoginModal.jsx";
+import UpgradeModal from "./UpgradeModal.jsx";
 import { MyContext, THEMES } from "./MyContext.jsx";
 import { useState, useEffect } from 'react';
 import { v1 as uuidv1 } from "uuid";
@@ -45,6 +47,50 @@ function App() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 768);
 
+  // Authentication & Subscription Plan States
+  const [isLoggedIn, setIsLoggedIn] = useState(() => localStorage.getItem("sigmagpt-is-logged-in") === "true");
+  const [userPlan, setUserPlan] = useState(() => localStorage.getItem("sigmagpt-user-plan") || "Free");
+  const [isLoginOpen, setIsLoginOpen] = useState(() => localStorage.getItem("sigmagpt-is-logged-in") !== "true");
+  const [isUpgradeOpen, setIsUpgradeOpen] = useState(false);
+  const [toastMsg, setToastMsg] = useState("");
+
+  const showToast = (msg) => {
+    setToastMsg(msg);
+    setTimeout(() => {
+      setToastMsg("");
+    }, 3500);
+  };
+
+  const handleLogin = (user, mail) => {
+    const finalName = user && user.trim() ? user.trim() : "Explorer";
+    const finalMail = mail && mail.trim() ? mail.trim() : "";
+    setUsername(finalName);
+    setEmail(finalMail);
+    setIsLoggedIn(true);
+    setIsLoginOpen(false);
+    localStorage.setItem("sigmagpt-is-logged-in", "true");
+    localStorage.setItem("sigmagpt-username", finalName);
+    localStorage.setItem("sigmagpt-email", finalMail);
+    saveProfileBackend({ username: finalName, email: finalMail, isLoggedIn: true, plan: userPlan });
+    showToast(`Welcome back, ${finalName}! Logged in successfully.`);
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setIsLoginOpen(true);
+    localStorage.setItem("sigmagpt-is-logged-in", "false");
+    saveProfileBackend({ isLoggedIn: false });
+    showToast("Logged out successfully.");
+  };
+
+  const handleUpgradePlan = (newPlan) => {
+    setUserPlan(newPlan);
+    localStorage.setItem("sigmagpt-user-plan", newPlan);
+    saveProfileBackend({ plan: newPlan });
+    setIsUpgradeOpen(false);
+    showToast(`Upgraded to ${newPlan} Plan successfully! 🎉`);
+  };
+
   // Sync profile from backend database
   const fetchProfile = async () => {
     try {
@@ -55,6 +101,11 @@ function App() {
         if (data.email !== undefined) setEmail(data.email);
         if (data.bio !== undefined) setBio(data.bio);
         if (data.avatarColor) setAvatarColor(data.avatarColor);
+        if (data.plan) setUserPlan(data.plan);
+        if (data.isLoggedIn !== undefined && localStorage.getItem("sigmagpt-is-logged-in") === null) {
+          setIsLoggedIn(data.isLoggedIn);
+          setIsLoginOpen(!data.isLoggedIn);
+        }
       }
     } catch (err) {
       console.log("Using local storage fallback for user profile:", err);
@@ -199,7 +250,13 @@ function App() {
     customPrompt, setCustomPrompt,
     codeTheme, setCodeTheme,
     isSettingsOpen, setIsSettingsOpen,
-    isSidebarOpen, setIsSidebarOpen
+    isSidebarOpen, setIsSidebarOpen,
+    isLoggedIn, setIsLoggedIn,
+    userPlan, setUserPlan,
+    isLoginOpen, setIsLoginOpen,
+    isUpgradeOpen, setIsUpgradeOpen,
+    handleLogin, handleLogout, handleUpgradePlan,
+    showToast
   }; 
 
   return (
@@ -208,6 +265,14 @@ function App() {
           <Sidebar></Sidebar>
           <ChatWindow></ChatWindow>
           <SettingsModal></SettingsModal>
+          <LoginModal></LoginModal>
+          <UpgradeModal></UpgradeModal>
+          {toastMsg && (
+            <div className="toast-notification animate-bounce-in">
+              <i className="fa-solid fa-circle-check toast-icon"></i>
+              <span>{toastMsg}</span>
+            </div>
+          )}
         </MyContext.Provider>
     </div>
   )
