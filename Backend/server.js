@@ -5,6 +5,8 @@ import mongoose from "mongoose";
 import chatRoutes from "./routes/chat.js";
 import profileRoutes from "./routes/profile.js";
 import searchHistoryRoutes from "./routes/searchHistory.js";
+import authRoutes from "./routes/auth.js";
+import subscriptionRoutes from "./routes/subscription.js";
 import { MongoMemoryServer } from "mongodb-memory-server";
 
 const app = express();
@@ -16,6 +18,9 @@ app.use(cors());
 app.use("/api", chatRoutes);
 app.use("/api", profileRoutes);
 app.use("/api", searchHistoryRoutes);
+app.use("/api", authRoutes);
+app.use("/api", subscriptionRoutes);
+
 
 app.listen(PORT, () => {
     console.log(`server running on ${PORT}`);
