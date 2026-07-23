@@ -5,7 +5,7 @@ import { MyContext } from "./MyContext.jsx";
 function LoginModal() {
   const { isLoginOpen, setIsLoginOpen, isLoggedIn, handleLogin, username, email } = useContext(MyContext);
   
-  const [isSignUp, setIsSignUp] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(true);
   const [nameInput, setNameInput] = useState(username !== "Explorer" ? username : "");
   const [emailInput, setEmailInput] = useState(email || "");
   const [passwordInput, setPasswordInput] = useState("");
@@ -112,17 +112,17 @@ function LoginModal() {
         <div className="auth-tab-bar">
           <button 
             type="button" 
+            className={`auth-tab-btn ${isSignUp ? "active" : ""}`}
+            onClick={() => { setIsSignUp(true); setError(""); }}
+          >
+            <i className="fa-solid fa-user-plus"></i> 1st: Create Account
+          </button>
+          <button 
+            type="button" 
             className={`auth-tab-btn ${!isSignUp ? "active" : ""}`}
             onClick={() => { setIsSignUp(false); setError(""); }}
           >
             <i className="fa-solid fa-right-to-bracket"></i> Sign In
-          </button>
-          <button 
-            type="button" 
-            className={`auth-tab-btn ${isSignUp ? "active" : ""}`}
-            onClick={() => { setIsSignUp(true); setError(""); }}
-          >
-            <i className="fa-solid fa-user-plus"></i> Create Account
           </button>
         </div>
 
