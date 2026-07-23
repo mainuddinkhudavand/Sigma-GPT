@@ -2,6 +2,7 @@ import './App.css';
 import Sidebar from "./Sidebar.jsx";
 import ChatWindow from "./ChatWindow.jsx";
 import SettingsModal from "./SettingsModal.jsx";
+import ProfileModal from "./ProfileModal.jsx";
 import LoginModal from "./LoginModal.jsx";
 import UpgradeModal from "./UpgradeModal.jsx";
 import { MyContext, THEMES } from "./MyContext.jsx";
@@ -46,6 +47,7 @@ function App() {
   const [customPrompt, setCustomPrompt] = useState(localStorage.getItem("sigmagpt-custom-prompt") || "You are an expert tutor who explains complex scientific concepts using simple analogies.");
   const [codeTheme, setCodeTheme] = useState(getInitialCodeTheme);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 768);
 
   // Authentication & Subscription Plan States
@@ -260,6 +262,7 @@ function App() {
     customPrompt, setCustomPrompt,
     codeTheme, setCodeTheme,
     isSettingsOpen, setIsSettingsOpen,
+    isProfileOpen, setIsProfileOpen,
     isSidebarOpen, setIsSidebarOpen,
     isLoggedIn, setIsLoggedIn,
     userPlan, setUserPlan,
@@ -275,6 +278,7 @@ function App() {
           <Sidebar></Sidebar>
           <ChatWindow></ChatWindow>
           <SettingsModal></SettingsModal>
+          <ProfileModal></ProfileModal>
           <LoginModal></LoginModal>
           <UpgradeModal></UpgradeModal>
           {toastMsg && (

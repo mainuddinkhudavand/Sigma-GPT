@@ -6,7 +6,7 @@ import { useContext, useState, useEffect } from "react";
 function ChatWindow() {
     const {
         prompt, setPrompt, reply, setReply, currThreadId, prevChats, setPrevChats, 
-        setNewChat, persona, setPersona, customPrompt, setIsSettingsOpen, username, 
+        setNewChat, persona, setPersona, customPrompt, setIsSettingsOpen, setIsProfileOpen, username, 
         avatarColor, isSidebarOpen, setIsSidebarOpen, isLoggedIn, setIsLoginOpen, 
         userPlan, setIsUpgradeOpen, handleLogout
     } = useContext(MyContext);
@@ -137,8 +137,11 @@ function ChatWindow() {
                         <small>{isLoggedIn ? (userPlan + " Member") : "Guest User"}</small>
                     </div>
                     <div className="dropDownDivider"></div>
+                    <div className="dropDownItem" onClick={() => { setIsProfileOpen(true); setIsOpen(false); }}>
+                        <i className="fa-solid fa-user"></i> My Profile
+                    </div>
                     <div className="dropDownItem" onClick={() => { setIsSettingsOpen(true); setIsOpen(false); }}>
-                        <i className="fa-solid fa-gear"></i> Settings & Profile
+                        <i className="fa-solid fa-gear"></i> System Settings
                     </div>
                     <div className="dropDownItem" onClick={() => { setIsUpgradeOpen(true); setIsOpen(false); }}>
                         <i className="fa-solid fa-cloud-arrow-up"></i> Upgrade plan
@@ -149,7 +152,7 @@ function ChatWindow() {
                         </div>
                     ) : (
                         <div className="dropDownItem primary-item" onClick={() => { setIsLoginOpen(true); setIsOpen(false); }}>
-                            <i className="fa-solid fa-right-to-bracket"></i> Sign In / 1st Login
+                            <i className="fa-solid fa-right-to-bracket"></i> Sign In / Register
                         </div>
                     )}
                 </div>
