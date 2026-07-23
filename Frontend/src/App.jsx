@@ -36,8 +36,8 @@ function App() {
   };
 
   const [theme, setTheme] = useState(getInitialTheme);
-  const [username, setUsername] = useState(localStorage.getItem("sigmagpt-username") || "Explorer");
-  const [email, setEmail] = useState(localStorage.getItem("sigmagpt-email") || "");
+  const [username, setUsername] = useState(localStorage.getItem("sigmagpt-username") || "Alex Rivera");
+  const [email, setEmail] = useState(localStorage.getItem("sigmagpt-email") || "alex@sigmagpt.ai");
   const [bio, setBio] = useState(localStorage.getItem("sigmagpt-bio") || "Exploring the AI cosmos with SigmaGPT.");
   const [avatarColor, setAvatarColor] = useState(localStorage.getItem("sigmagpt-avatar-color") || "#339cff");
   const [avatarIcon, setAvatarIcon] = useState(localStorage.getItem("sigmagpt-avatar-icon") || "fa-robot");
@@ -49,11 +49,12 @@ function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 768);
 
   // Authentication & Subscription Plan States
-  const [isLoggedIn, setIsLoggedIn] = useState(() => localStorage.getItem("sigmagpt-is-logged-in") === "true");
+  const [isLoggedIn, setIsLoggedIn] = useState(() => localStorage.getItem("sigmagpt-is-logged-in") !== "false");
   const [userPlan, setUserPlan] = useState(() => localStorage.getItem("sigmagpt-user-plan") || "Free");
-  const [isLoginOpen, setIsLoginOpen] = useState(() => localStorage.getItem("sigmagpt-is-logged-in") !== "true");
+  const [isLoginOpen, setIsLoginOpen] = useState(() => localStorage.getItem("sigmagpt-is-logged-in") === "false");
   const [isUpgradeOpen, setIsUpgradeOpen] = useState(false);
   const [toastMsg, setToastMsg] = useState("");
+
 
   const showToast = (msg) => {
     setToastMsg(msg);
