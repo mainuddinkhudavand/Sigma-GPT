@@ -40,6 +40,7 @@ function App() {
   const [email, setEmail] = useState(localStorage.getItem("sigmagpt-email") || "");
   const [bio, setBio] = useState(localStorage.getItem("sigmagpt-bio") || "Exploring the AI cosmos with SigmaGPT.");
   const [avatarColor, setAvatarColor] = useState(localStorage.getItem("sigmagpt-avatar-color") || "#339cff");
+  const [avatarIcon, setAvatarIcon] = useState(localStorage.getItem("sigmagpt-avatar-icon") || "fa-robot");
   const [searchHistory, setSearchHistory] = useState([]);
   const [persona, setPersona] = useState(getInitialPersona);
   const [customPrompt, setCustomPrompt] = useState(localStorage.getItem("sigmagpt-custom-prompt") || "You are an expert tutor who explains complex scientific concepts using simple analogies.");
@@ -101,6 +102,7 @@ function App() {
         if (data.email !== undefined) setEmail(data.email);
         if (data.bio !== undefined) setBio(data.bio);
         if (data.avatarColor) setAvatarColor(data.avatarColor);
+        if (data.avatarIcon) setAvatarIcon(data.avatarIcon);
         if (data.plan) setUserPlan(data.plan);
         if (data.isLoggedIn !== undefined && localStorage.getItem("sigmagpt-is-logged-in") === null) {
           setIsLoggedIn(data.isLoggedIn);
@@ -114,6 +116,7 @@ function App() {
 
   const saveProfileBackend = async (updatedData) => {
     try {
+      if (updatedData.avatarIcon) localStorage.setItem("sigmagpt-avatar-icon", updatedData.avatarIcon);
       await fetch("http://localhost:8080/api/profile", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -204,6 +207,10 @@ function App() {
   }, [avatarColor]);
 
   useEffect(() => {
+    localStorage.setItem("sigmagpt-avatar-icon", avatarIcon);
+  }, [avatarIcon]);
+
+  useEffect(() => {
     localStorage.setItem("sigmagpt-persona", persona);
   }, [persona]);
 
@@ -242,6 +249,7 @@ function App() {
     email, setEmail,
     bio, setBio,
     avatarColor, setAvatarColor,
+    avatarIcon, setAvatarIcon,
     saveProfileBackend,
     searchHistory, setSearchHistory,
     fetchSearchHistory, logSearchQuery,
