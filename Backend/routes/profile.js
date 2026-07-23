@@ -9,13 +9,13 @@ router.get("/profile", async (req, res) => {
         let profile = await UserProfile.findOne({});
         if (!profile) {
             profile = new UserProfile({
-                username: "Alex Rivera",
-                email: "alex@sigmagpt.ai",
+                username: "Explorer",
+                email: "",
                 bio: "Exploring the AI cosmos with SigmaGPT.",
                 avatarColor: "#339cff",
                 avatarIcon: "fa-robot",
                 plan: "Free",
-                isLoggedIn: true
+                isLoggedIn: false
             });
             await profile.save();
         }
