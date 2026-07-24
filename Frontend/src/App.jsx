@@ -5,6 +5,7 @@ import SettingsModal from "./SettingsModal.jsx";
 import ProfileModal from "./ProfileModal.jsx";
 import LoginModal from "./LoginModal.jsx";
 import UpgradeModal from "./UpgradeModal.jsx";
+import AuthPage from "./AuthPage.jsx";
 import { MyContext, THEMES } from "./MyContext.jsx";
 import { useState, useEffect } from 'react';
 import { v1 as uuidv1 } from "uuid";
@@ -273,8 +274,11 @@ function App() {
   }; 
 
   return (
-    <div className={`app ${isSidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
-      <MyContext.Provider value={providerValues}>
+    <MyContext.Provider value={providerValues}>
+      {!isLoggedIn ? (
+        <AuthPage />
+      ) : (
+        <div className={`app ${isSidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
           <Sidebar></Sidebar>
           <ChatWindow></ChatWindow>
           <SettingsModal></SettingsModal>
@@ -287,9 +291,10 @@ function App() {
               <span>{toastMsg}</span>
             </div>
           )}
-        </MyContext.Provider>
-    </div>
-  )
+        </div>
+      )}
+    </MyContext.Provider>
+  );
 }
 
 export default App;
