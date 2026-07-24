@@ -128,4 +128,29 @@ router.post("/auth/logout", async (req, res) => {
     }
 });
 
+// Check Auth Status
+router.get("/auth/status", async (req, res) => {
+    try {
+        let profile = await UserProfile.findOne({});
+        if (!profile) {
+            return res.json({ isLoggedIn: false });
+        }
+        res.json({
+            isLoggedIn: profile.isLoggedIn,
+            user: {
+                username: profile.username,
+                email: profile.email,
+                bio: profile.bio,
+                avatarColor: profile.avatarColor,
+                avatarIcon: profile.avatarIcon,
+                plan: profile.plan,
+                credits: profile.credits
+            }
+        });
+    } catch (err) {
+        res.status(500).json({ error: "Failed to check auth status." });
+    }
+});
+
 export default router;
+
