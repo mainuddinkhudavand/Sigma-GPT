@@ -126,6 +126,13 @@ function AuthPage() {
             Sign up or log in to unlock custom AI Personas, voice audio text-to-speech, infinite thread history, and premium dark mode themes.
           </p>
 
+          <div className="persona-tags-row animate-fade-in">
+            <span className="persona-tag"><i className="fa-solid fa-robot"></i> General Assistant</span>
+            <span className="persona-tag"><i className="fa-solid fa-code"></i> Code Wizard</span>
+            <span className="persona-tag"><i className="fa-solid fa-pen-nib"></i> Creative Writer</span>
+            <span className="persona-tag"><i className="fa-solid fa-face-grin-tongue-wink"></i> Sarcastic Buddy</span>
+          </div>
+
           <div className="features-grid animate-fade-in">
             <div className="feature-card">
               <div className="feature-icon"><i className="fa-solid fa-bolt"></i></div>
